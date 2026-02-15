@@ -1,0 +1,6 @@
+NAME="ElleOS"
+VERSION="Alpha 1"
+ID=elleos
+PRETTY_NAME="ElleOS Alpha"
+ANSI_COLOR="0;35"
+HOME_URL="https://github.com/lyszt/elleOS_core"

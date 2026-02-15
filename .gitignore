@@ -1,8 +1,11 @@
-# Ignore the disk images (The Cake)
 *.img
 *.iso
 *.qcow2
 *.vDI
+mnt_img/
+mnt_image/
+mnt/
+*.tar.xz
 
 # Ignore compiled object files (The intermediate batter)
 *.o
