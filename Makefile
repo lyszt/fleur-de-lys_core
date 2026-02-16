@@ -14,21 +14,27 @@ mount:
 	fi
 	@mkdir -p $(MNT)
 	@if ! mountpoint -q $(MNT); then \
-		echo "--- Mounting root (p3) to $(MNT)..."; \
-		mount -t xfs "$$(losetup -j $(IMAGE) | cut -d: -f1)p3" $(MNT); \
+		echo "--- Mounting root (p1) to $(MNT)..."; \
+		mount -t f2fs "$$(losetup -j $(IMAGE) | cut -d: -f1)p1" $(MNT); \
 	else \
 		echo "--- $(MNT) already mounted."; \
 	fi
-	@mkdir -p $(MNT)/boot
-	@if ! mountpoint -q $(MNT)/boot; then \
-		echo "--- Mounting EFI (p1) to $(MNT)/boot..."; \
-		mount -t vfat "$$(losetup -j $(IMAGE) | cut -d: -f1)p1" $(MNT)/boot; \
+	@mkdir -p $(MNT)/sources
+	@if ! mountpoint -q $(MNT)/sources; then \
+		echo "--- Mounting sources (p2) to $(MNT)/sources..."; \
+		mount -t bcachefs "$$(losetup -j $(IMAGE) | cut -d: -f1)p2" $(MNT)/sources; \
+	fi
+	@mkdir -p $(MNT)/home
+	@if ! mountpoint -q $(MNT)/home; then \
+		echo "--- Mounting home (p3) to $(MNT)/home..."; \
+		mount -t bcachefs "$$(losetup -j $(IMAGE) | cut -d: -f1)p3" $(MNT)/home; \
 	fi
 	@echo "--- Mounted."
 
 umount:
 	@if [ "$$(id -u)" -ne 0 ]; then echo "Run with sudo"; exit 1; fi
-	-@mountpoint -q $(MNT)/boot && umount $(MNT)/boot
+	-@mountpoint -q $(MNT)/home && umount $(MNT)/home
+	-@mountpoint -q $(MNT)/sources && umount $(MNT)/sources
 	-@mountpoint -q $(MNT) && umount $(MNT)
 	@if [ -n "$(LOOP_DEV)" ]; then \
 		losetup -d $(LOOP_DEV); \

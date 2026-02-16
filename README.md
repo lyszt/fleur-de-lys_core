@@ -10,9 +10,9 @@ The image uses a GPT partition table:
 
 | Partition | Size | Filesystem | Label            |
 |-----------|------|------------|------------------|
-| p1        | 10G  | F2FS       | ElleOS_Root      |
-| p2        | 20G  | bcachefs   | ElleOS_Sources   |
-| p3        | 10G  | bcachefs   | ElleOS_Home      |
+| p1        | 10G  | F2FS       | Fleur_de_Lys_Root    |
+| p2        | 20G  | bcachefs   | Fleur_de_Lys_Sources |
+| p3        | 10G  | bcachefs   | Fleur_de_Lys_Home    |
 
 ## Prerequisites
 
