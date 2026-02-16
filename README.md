@@ -8,19 +8,18 @@ Fleur de Lys is a Linux distribution built from scratch, following the Linux Fro
 
 The image uses a GPT partition table:
 
-| Partition | Size   | Filesystem | Purpose    |
-|-----------|--------|------------|------------|
-| p1        | 512 MB | FAT32      | EFI boot   |
-| p2        | 4 GB   | --         | (reserved) |
-| p3        | 10 GB  | XFS        | Root / workspace |
-| p4        | rest   | F2FS       | User data  |
+| Partition | Size | Filesystem | Label            |
+|-----------|------|------------|------------------|
+| p1        | 10G  | F2FS       | ElleOS_Root      |
+| p2        | 20G  | bcachefs   | ElleOS_Sources   |
+| p3        | 10G  | bcachefs   | ElleOS_Home      |
 
 ## Prerequisites
 
 A Linux host with the following available:
 
 - `losetup`, `mount`, `chroot` (util-linux)
-- XFS and FAT32 filesystem support (`xfsprogs`, `dosfstools`)
+- F2FS and bcachefs filesystem support (`f2fs-tools`, `bcachefs-tools`)
 - Standard development toolchain (gcc, g++, make, binutils, etc.)
 
 Run `bash tests/version-check.sh` to verify your host has the required tools.
