@@ -51,4 +51,9 @@ run: mount
 	@mountpoint -q $(MNT)/sys  || mount -t sysfs sys  $(MNT)/sys
 	@mountpoint -q $(MNT)/run  || mount -t tmpfs tmpfs $(MNT)/run
 	@echo "--- Entering chroot..."
-	TERM=linux chroot $(MNT) /bin/bash --login
+	chroot $(MNT) /usr/bin/env -i \
+		HOME=/root \
+		TERM=linux \
+		PS1='(fleur chroot) \u:\w\$$ ' \
+		PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+		/bin/bash --login +h
