@@ -33,6 +33,10 @@ mount:
 
 umount:
 	@if [ "$$(id -u)" -ne 0 ]; then echo "Run with sudo"; exit 1; fi
+	-@mountpoint -q $(MNT)/run  && umount $(MNT)/run
+	-@mountpoint -q $(MNT)/sys  && umount $(MNT)/sys
+	-@mountpoint -q $(MNT)/proc && umount $(MNT)/proc
+	-@mountpoint -q $(MNT)/dev  && umount $(MNT)/dev
 	-@mountpoint -q $(MNT)/home && umount $(MNT)/home
 	-@mountpoint -q $(MNT)/sources && umount $(MNT)/sources
 	-@mountpoint -q $(MNT) && umount $(MNT)
