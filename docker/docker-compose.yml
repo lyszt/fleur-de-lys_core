@@ -1,0 +1,29 @@
+services:
+  fleur-builder:
+    build: .
+    image: fleur-de-lys-builder:latest
+    container_name: fleur-build
+    stdin_open: true
+    tty: true
+    volumes:
+      # Your project repo (Makefile, scripts/, tests/, etc.)
+      - .:/build
+      # Directory on your HOST that contains Fleur_de_Lys.img
+      # Change the left side to wherever you keep the image, e.g.:
+      #   ~/projects/fleur-de-lys:/images
+      - ./images:/images
+    environment:
+      - TERM=xterm-256color
+      # Convenience: scripts can reference the image path as 
+      - FLEUR_IMG=/images/Fleur_de_Lys.img
+    # Required for losetup, chroot, and mounting virtual filesystems
+    privileged: true
+    cap_add:
+      - SYS_ADMIN
+      - MKNOD
+      - SYS_CHROOT
+    security_opt:
+      - apparmor:unconfined
+    # Expose loop devices so losetup works inside the container
+    devices:
+      - /dev/loop-control:/dev/loop-control
