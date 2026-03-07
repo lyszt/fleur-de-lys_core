@@ -31,11 +31,11 @@ need_running() {
 case "$1" in
 build)
   echo "[*] Building Fleur de Lys Docker image..."
-  docker compose build
+  docker-compose build
   ;;
 start)
   echo "[*] Starting container..."
-  docker compose up -d
+  docker-compose up -d
   echo "[+] '$CONTAINER' is running."
   ;;
 shell)
@@ -45,7 +45,7 @@ shell)
   ;;
 versions)
   need_running
-  docker exec -it $CONTAINER bash /build/tests/version-check.sh
+  docker exec -it $CONTAINER /usr/local/bin/version-check.sh
   ;;
 mount)
   need_running
@@ -69,11 +69,11 @@ new-img)
   ;;
 stop)
   echo "[*] Stopping container..."
-  docker compose stop
+  docker-compose stop
   ;;
 clean)
   echo "[*] Removing container (image and .img file are preserved)..."
-  docker compose down
+  docker-compose down
   ;;
 status)
   docker ps -a --filter "name=$CONTAINER"

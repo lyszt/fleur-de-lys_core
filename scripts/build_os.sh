@@ -1,46 +1,64 @@
 #!/bin/bash
-# build_image.sh
+# build_os.sh
 # Run this with sudo
-
 set -e
 
-IMAGE_NAME="../providentia.img"
-IMAGE_SIZE="20G"
+IMAGE_NAME="../fleur.img"
+IMAGE_SIZE="23G"
 
-# 1. Create the empty file (The Fake Hard Drive)
+# 1. Create the empty disk image
 echo "--- Creating empty disk image ($IMAGE_SIZE)..."
-fallocate -l $IMAGE_SIZE $IMAGE_NAME
+truncate -s $IMAGE_SIZE $IMAGE_NAME
 
-# 2. Partition the file using sfdisk
-# We use type aliases: U=EFI, L=Linux Filesystem
+# 2. Partition with GPT layout matching Fleur de Lys spec
+#   p1: 10G  - Root       (F2FS)
+#   p2: 20G  - Sources    (bcachefs)
+#   p3: 10G  - Home       (bcachefs)
 echo "--- Partitioning..."
-sfdisk $IMAGE_NAME <<EOF
+sfdisk $IMAGE_NAME <<SFDISK
 label: gpt
-,512M, U
-,4G, L
-,10G, L
-,, L
-EOF
+,5G, L
+,15G, L
+,3G, L
+SFDISK
 
-# 3. Mount the image as a Loop Device so we can format it
-# -P tells kernel to scan for partitions (creates /dev/loop0p1, p2, etc.)
-LOOP_DEV=$(losetup -P --show -f $IMAGE_NAME)
+# 3. Recreate loop device nodes in case they're lost (common in containers)
+echo "--- Ensuring loop devices exist..."
+for i in $(seq 0 7); do
+  [ -e /dev/loop$i ] || mknod -m 0660 /dev/loop$i b 7 $i
+done
+[ -e /dev/loop-control ] || mknod -m 0660 /dev/loop-control c 10 237
+
+# 4. Attach image as loop device (without -P, we'll use kpartx instead)
+LOOP_DEV=$(losetup --show -f $IMAGE_NAME)
 echo "--- Mounted as $LOOP_DEV"
 
-# 4. Format the Writable Partitions
+# 5. Use kpartx to create properly-sized partition mappings
+echo "--- Mapping partitions via kpartx..."
+kpartx -av $LOOP_DEV
 
-# Partition 1: Boot (FAT32 for EFI)
-echo "--- Formatting Boot (EFI)..."
-mkfs.fat -F32 -n PROV_EFI "${LOOP_DEV}p1"
+# kpartx creates /dev/mapper/loop0p1, loop0p2, loop0p3
+LOOP_NAME=$(basename $LOOP_DEV)
+PART1="/dev/mapper/${LOOP_NAME}p1"
+PART2="/dev/mapper/${LOOP_NAME}p2"
+PART3="/dev/mapper/${LOOP_NAME}p3"
 
-# Partition 3: AI Models (XFS)
-# Optimization: largeio and larger inodes for massive files
-echo "--- Formatting Model Store (XFS)..."
-mkfs.xfs -f -L PROV_MODELS "${LOOP_DEV}p3"
+sleep 1
 
-# Partition 4: Home/Data (F2FS)
-echo "--- Formatting User Data (F2FS)..."
-mkfs.f2fs -l PROV_DATA -O extra_attr,inode_checksum,sb_checksum,compression "${LOOP_DEV}p4"
+# 6. Format partitions
+echo "--- Formatting Root (F2FS)..."
+mkfs.f2fs -l Fleur_de_Lys_Root \
+  -O extra_attr,inode_checksum,sb_checksum,compression \
+  "$PART1"
 
+echo "--- Formatting Sources (bcachefs)..."
+bcachefs format --label=Fleur_de_Lys_Sources --no-initialize --replicas=1 "$PART2"
+
+echo "--- Formatting Home (bcachefs)..."
+bcachefs format --label=Fleur_de_Lys_Home --no-initialize --replicas=1 "$PART3"
+
+# 7. Remove kpartx mappings and detach loop device
+kpartx -dv $LOOP_DEV
 losetup -d $LOOP_DEV
+
 echo "--- Success! $IMAGE_NAME is ready."

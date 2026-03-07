@@ -1,0 +1,6 @@
+# Ignore everything by default
+*
+
+# Only allow what the build actually needs
+!scripts/build_toolchain.sh
+!scripts/build_temptools.sh

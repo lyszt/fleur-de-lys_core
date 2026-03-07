@@ -6,11 +6,9 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      # Your project repo (Makefile, scripts/, tests/, etc.)
-      - .:/build
-      # Directory on your HOST that contains Fleur_de_Lys.img
-      # Change the left side to wherever you keep the image, e.g.:
-      #   ~/projects/fleur-de-lys:/images
+      # Mount the repo root (one level up from docker/) into /build
+      - ..:/build
+      # The disk image lives in docker/images/
       - ./images:/images
     environment:
       - TERM=xterm-256color
