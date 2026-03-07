@@ -29,10 +29,10 @@ RUN mkdir -pv /tools /sources
 
 COPY scripts/build_toolchain.sh /build_toolchain.sh
 
-# Run build + clean sources in one layer so nothing lingers
-RUN chmod +x /build_toolchain.sh && \
-    /build_toolchain.sh && \
-    rm -rf /sources /build_toolchain.sh
+# Split into checkpoints for easier debugging — merge into one RUN once stable
+RUN chmod +x /build_toolchain.sh
+RUN /build_toolchain.sh
+RUN rm -rf /sources /build_toolchain.sh
 
 # -----------------------------------------------------------------------------
 # STAGE 2: temp-tools-builder
@@ -61,9 +61,10 @@ RUN mkdir -pv /sources
 
 COPY scripts/build_temptools.sh /build_temptools.sh
 
-RUN chmod +x /build_temptools.sh && \
-    /build_temptools.sh && \
-    rm -rf /sources /build_temptools.sh
+# Split into checkpoints for easier debugging — merge into one RUN once stable
+RUN chmod +x /build_temptools.sh
+RUN /build_temptools.sh
+RUN rm -rf /sources /build_temptools.sh
 
 # -----------------------------------------------------------------------------
 # STAGE 3: final — clean slate, copy only /tools

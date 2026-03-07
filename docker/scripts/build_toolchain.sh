@@ -123,7 +123,7 @@ make mrproper
 make headers
 find usr/include -type f ! -name '*.h' -delete
 mkdir -pv /tools/include
-cp -rv usr/include /tools/include
+cp -rv usr/include/* /tools/include/
 cd $SOURCES
 rm -rf $ZEN_DIR
 
