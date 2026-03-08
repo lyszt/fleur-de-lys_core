@@ -1,9 +1,10 @@
 #!/bin/bash
 # build_toolchain.sh — Stage 1: Cross-toolchain
-# Builds: binutils pass 1, gcc pass 1, zen-kernel headers, glibc, libstdc++
+# Builds: binutils pass 1, gcc pass 1, zen-kernel headers, libstdc++
+# Glibc is built in a separate Docker RUN step (build_glibc.sh)
 # Target: x86_64-fleur-linux-gnu
 # Installs to: /tools
-set -e
+set -ex
 
 LFS_TGT=x86_64-fleur-linux-gnu
 TOOLS=/tools
@@ -128,39 +129,7 @@ cd $SOURCES
 rm -rf $ZEN_DIR
 
 # ---------------------------------------------------------------------------
-# 4. Glibc
-# ---------------------------------------------------------------------------
-echo ">>> Building glibc..."
-tar -xf glibc-${GLIBC_VER}.tar.xz
-cd glibc-${GLIBC_VER}
-
-# Fix for FHS compliance
-ln -sfv ../lib/ld-linux-x86-64.so.2 /tools/lib64
-ln -sfv ../lib/ld-linux-x86-64.so.2 /tools/lib64/ld-lsb-x86-64.so.3
-
-mkdir -v build && cd build
-echo "rootsbindir=/tools/sbin" >configparms
-../configure \
-  --prefix=/tools \
-  --host=$LFS_TGT \
-  --build=$(../scripts/config.guess) \
-  --enable-kernel=5.4 \
-  --with-headers=/tools/include \
-  libc_cv_slibdir=/tools/lib
-make $MAKEFLAGS
-make install
-
-# Sanity check: make sure the cross-linker works
-echo 'int main(){}' | $LFS_TGT-gcc -x c - -o /tmp/dummy
-readelf -l /tmp/dummy | grep -q "Requesting program interpreter: /tools"
-echo ">>> Glibc sanity check passed."
-rm /tmp/dummy
-
-cd $SOURCES
-rm -rf glibc-${GLIBC_VER}
-
-# ---------------------------------------------------------------------------
-# 5. Libstdc++ (from GCC sources)
+# 4. Libstdc++ (from GCC sources)
 # ---------------------------------------------------------------------------
 echo ">>> Building libstdc++..."
 tar -xf gcc-${GCC_VER}.tar.xz
@@ -181,4 +150,4 @@ rm -v /tools/lib/lib{stdc++{,exp},supc++}.la
 cd $SOURCES
 rm -rf gcc-${GCC_VER}
 
-echo ">>> Stage 1 complete: cross-toolchain installed to /tools"
+echo ">>> Stage 1 (pre-glibc) complete: cross-toolchain installed to /tools"

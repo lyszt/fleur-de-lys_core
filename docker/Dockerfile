@@ -1,6 +1,7 @@
 # =============================================================================
 # Fleur de Lys — Multi-Stage Build Environment
-# Stage 1: toolchain-builder  — cross-compiler
+# Stage 1: toolchain-builder  — cross-compiler (binutils, gcc, kernel headers, libstdc++)
+# Stage 1b: glibc built as a separate RUN for fast iteration
 # Stage 2: temp-tools-builder — all pre-chroot tools
 # Stage 3: final              — clean image, just /tools + runtime fs utils
 # =============================================================================
@@ -9,7 +10,6 @@
 # STAGE 1: toolchain-builder
 # -----------------------------------------------------------------------------
 FROM archlinux:latest AS toolchain-builder
-
 ENV LC_ALL=POSIX
 ENV LFS_TGT=x86_64-fleur-linux-gnu
 ENV PATH=/tools/bin:/usr/bin:/bin
@@ -28,17 +28,23 @@ RUN pacman -Syu --noconfirm && \
 RUN mkdir -pv /tools /sources
 
 COPY scripts/build_toolchain.sh /build_toolchain.sh
-
-# Split into checkpoints for easier debugging — merge into one RUN once stable
 RUN chmod +x /build_toolchain.sh
+
+# Builds: binutils pass 1, gcc pass 1, zen kernel headers, libstdc++
+# Does NOT build glibc — that is the next step for easy re-runs
 RUN /build_toolchain.sh
-RUN rm -rf /sources /build_toolchain.sh
+
+# Glibc isolated as its own layer — rebuild this step alone when iterating
+COPY scripts/build_glibc.sh /build_glibc.sh
+RUN chmod +x /build_glibc.sh
+RUN /build_glibc.sh
+
+RUN rm -rf /sources /build_toolchain.sh /build_glibc.sh
 
 # -----------------------------------------------------------------------------
 # STAGE 2: temp-tools-builder
 # -----------------------------------------------------------------------------
 FROM archlinux:latest AS temp-tools-builder
-
 ENV LC_ALL=POSIX
 ENV LFS_TGT=x86_64-fleur-linux-gnu
 ENV PATH=/tools/bin:/usr/bin:/bin
@@ -60,8 +66,6 @@ COPY --from=toolchain-builder /tools /tools
 RUN mkdir -pv /sources
 
 COPY scripts/build_temptools.sh /build_temptools.sh
-
-# Split into checkpoints for easier debugging — merge into one RUN once stable
 RUN chmod +x /build_temptools.sh
 RUN /build_temptools.sh
 RUN rm -rf /sources /build_temptools.sh
