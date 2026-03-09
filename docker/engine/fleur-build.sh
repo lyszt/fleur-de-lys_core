@@ -36,25 +36,33 @@ build_recipe() {
 
   # Derive tarball filename from SRC_URI if set, otherwise guess
   local TARBALL
+  local WORKDIR
+  local META_WORKDIR=0
+
   if [ -n "$SRC_URI" ]; then
     TARBALL=$(basename "$SRC_URI")
   else
     TARBALL=$(ls ${PKG_NAME}-${PKG_VER}.tar.* 2>/dev/null | head -1)
   fi
 
-  if [ -z "$TARBALL" ] || [ ! -f "$TARBALL" ]; then
+  if [ -n "$TARBALL" ] && [ -f "$TARBALL" ]; then
+    WORKDIR=$(tar -tf "$TARBALL" 2>/dev/null | head -1 | cut -d/ -f1)
+    WORKDIR="/sources/${WORKDIR}"
+    tar -xf "$TARBALL"
+
+    if [ -z "$WORKDIR" ] || [ ! -d "$WORKDIR" ]; then
+      echo "Error: could not find extracted directory for ${PKG_NAME} ${PKG_VER} (tarball: $TARBALL)"
+      exit 1
+    fi
+  elif [ -n "$SRC_URI" ]; then
     echo "Error: tarball not found for ${PKG_NAME} ${PKG_VER}"
     exit 1
-  fi
-
-  local WORKDIR
-  WORKDIR=$(tar -tf "$TARBALL" 2>/dev/null | head -1 | cut -d/ -f1)
-  WORKDIR="/sources/${WORKDIR}"
-  tar -xf "$TARBALL"
-
-  if [ -z "$WORKDIR" ] || [ ! -d "$WORKDIR" ]; then
-    echo "Error: could not find extracted directory for ${PKG_NAME} ${PKG_VER} (tarball: $TARBALL)"
-    exit 1
+  else
+    META_WORKDIR=1
+    WORKDIR="/tmp/fleur-meta-${PKG_NAME}-${PKG_VER}"
+    rm -rf "$WORKDIR"
+    mkdir -p "$WORKDIR"
+    echo ">>> Engine: No source tarball for ${PKG_NAME}; using ${WORKDIR}"
   fi
 
   echo ">>> Engine: Building in ${WORKDIR}"
@@ -86,8 +94,12 @@ build_recipe() {
     fi
   )
 
-  cd /sources
-  rm -rf "$WORKDIR"
+  if [ "$META_WORKDIR" = "1" ]; then
+    rm -rf "$WORKDIR"
+  else
+    cd /sources
+    rm -rf "$WORKDIR"
+  fi
 }
 
 for recipe in "$@"; do

@@ -8,23 +8,18 @@ do_install() {
 
     cat > /tools/bin/$LFS_TGT-gcc << EOF
 #!/bin/sh
-exec /usr/bin/clang --target=$LFS_TGT --sysroot=/tools "$@"
+    exec /usr/bin/clang --target=$LFS_TGT --sysroot=/tools "\$@"
 EOF
 
     cat > /tools/bin/$LFS_TGT-g++ << EOF
 #!/bin/sh
-exec /usr/bin/clang++ --target=$LFS_TGT --sysroot=/tools "$@"
+    exec /usr/bin/clang++ --target=$LFS_TGT --sysroot=/tools "\$@"
 EOF
 
     cat > /tools/bin/$LFS_TGT-cpp << EOF
 #!/bin/sh
-exec /usr/bin/clang -E --target=$LFS_TGT --sysroot=/tools "$@"
+    exec /usr/bin/clang -E --target=$LFS_TGT --sysroot=/tools "\$@"
 EOF
 
     chmod +x /tools/bin/$LFS_TGT-gcc /tools/bin/$LFS_TGT-g++ /tools/bin/$LFS_TGT-cpp
-    ln -sfv $LFS_TGT-gcc /tools/bin/gcc
-    ln -sfv $LFS_TGT-g++ /tools/bin/g++
-    ln -sfv $LFS_TGT-cpp /tools/bin/cpp
-    ln -sfv $LFS_TGT-gcc /tools/bin/cc
-    ln -sfv $LFS_TGT-g++ /tools/bin/c++
 }
