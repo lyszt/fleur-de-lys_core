@@ -5,3 +5,4 @@
 !scripts/build_toolchain.sh
 !scripts/build_temptools.sh
 !scripts/build_glibc.sh
+!scripts/fetch_sources.sh

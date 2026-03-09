@@ -65,10 +65,15 @@ COPY --from=toolchain-builder /tools /tools
 
 RUN mkdir -pv /sources
 
+COPY scripts/fetch_sources.sh /fetch_sources.sh
+RUN chmod +x /fetch_sources.sh
+# Downloads isolated in their own layer — cheap to retry on flaky mirrors
+RUN /fetch_sources.sh
+
 COPY scripts/build_temptools.sh /build_temptools.sh
 RUN chmod +x /build_temptools.sh
 RUN /build_temptools.sh
-RUN rm -rf /sources /build_temptools.sh
+RUN rm -rf /sources /fetch_sources.sh /build_temptools.sh
 
 # -----------------------------------------------------------------------------
 # STAGE 3: final — clean slate, copy only /tools

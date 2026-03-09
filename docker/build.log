@@ -5,14 +5,14 @@
 #1 DONE 0.0s
 
 #2 [internal] load build definition from Dockerfile
-#2 transferring dockerfile: 4.54kB done
+#2 transferring dockerfile: 4.74kB done
 #2 DONE 0.0s
 
 #3 [internal] load metadata for docker.io/library/archlinux:latest
 #3 DONE 1.0s
 
 #4 [internal] load .dockerignore
-#4 transferring context: 199B done
+#4 transferring context: 225B done
 #4 DONE 0.0s
 
 #5 [toolchain-builder  1/10] FROM docker.io/library/archlinux:latest@sha256:6417af93a50740f2c88503b098e780c9edf5ee00aa156021c28bcfffe226f57d
@@ -23,94 +23,58 @@
 #6 CACHED
 
 #7 [internal] load build context
-#7 transferring context: 16.58kB done
+#7 transferring context: 6.31kB done
 #7 DONE 0.0s
 
-#8 [toolchain-builder  7/10] COPY scripts/build_glibc.sh /build_glibc.sh
+#8 [temp-tools-builder  3/11] COPY --from=toolchain-builder /tools /tools
 #8 CACHED
 
-#9 [toolchain-builder  9/10] RUN /build_glibc.sh
+#9 [toolchain-builder  4/10] COPY scripts/build_toolchain.sh /build_toolchain.sh
 #9 CACHED
 
-#10 [toolchain-builder  3/10] RUN mkdir -pv /tools /sources
+#10 [toolchain-builder  8/10] RUN chmod +x /build_glibc.sh
 #10 CACHED
 
-#11 [temp-tools-builder 3/8] COPY --from=toolchain-builder /tools /tools
+#11 [toolchain-builder  9/10] RUN /build_glibc.sh
 #11 CACHED
 
-#12 [toolchain-builder  8/10] RUN chmod +x /build_glibc.sh
+#12 [toolchain-builder  2/10] RUN pacman -Syu --noconfirm &&     pacman -S --noconfirm         base-devel gcc binutils make cmake ninja         autoconf automake libtool pkgconf bison flex m4         gmp mpfr libmpc openssl libelf ncurses         bzip2 gzip xz zstd curl wget git rsync         python perl texinfo gettext bc &&     pacman -Scc --noconfirm &&     rm -rf /var/cache/pacman/pkg/*
 #12 CACHED
 
-#13 [toolchain-builder  2/10] RUN pacman -Syu --noconfirm &&     pacman -S --noconfirm         base-devel gcc binutils make cmake ninja         autoconf automake libtool pkgconf bison flex m4         gmp mpfr libmpc openssl libelf ncurses         bzip2 gzip xz zstd curl wget git rsync         python perl texinfo gettext bc &&     pacman -Scc --noconfirm &&     rm -rf /var/cache/pacman/pkg/*
+#13 [toolchain-builder 10/10] RUN rm -rf /sources /build_toolchain.sh /build_glibc.sh
 #13 CACHED
 
-#14 [toolchain-builder 10/10] RUN rm -rf /sources /build_toolchain.sh /build_glibc.sh
+#14 [toolchain-builder  3/10] RUN mkdir -pv /tools /sources
 #14 CACHED
 
-#15 [toolchain-builder  4/10] COPY scripts/build_toolchain.sh /build_toolchain.sh
+#15 [toolchain-builder  5/10] RUN chmod +x /build_toolchain.sh
 #15 CACHED
 
-#16 [toolchain-builder  5/10] RUN chmod +x /build_toolchain.sh
+#16 [toolchain-builder  6/10] RUN /build_toolchain.sh
 #16 CACHED
 
-#17 [toolchain-builder  6/10] RUN /build_toolchain.sh
+#17 [toolchain-builder  7/10] COPY scripts/build_glibc.sh /build_glibc.sh
 #17 CACHED
 
-#18 [temp-tools-builder 4/8] RUN mkdir -pv /sources
+#18 [temp-tools-builder  4/11] RUN mkdir -pv /sources
 #18 CACHED
 
-#19 [temp-tools-builder 5/8] COPY scripts/build_temptools.sh /build_temptools.sh
+#19 [temp-tools-builder  5/11] COPY scripts/fetch_sources.sh /fetch_sources.sh
 #19 DONE 0.0s
 
-#20 [temp-tools-builder 6/8] RUN chmod +x /build_temptools.sh
+#20 [temp-tools-builder  6/11] RUN chmod +x /fetch_sources.sh
 #20 DONE 0.2s
 
-#21 [temp-tools-builder 7/8] RUN /build_temptools.sh
-#21 0.188 >>> Downloading sources...
-#21 0.193   [fetch] m4-1.4.21.tar.xz from ftp.gnu.org ...
-#21 8.930   [ok]    m4-1.4.21.tar.xz
-#21 8.936   [fetch] ncurses-6.6.tar.gz from ftp.gnu.org ...
-#21 14.24   [ok]    ncurses-6.6.tar.gz
-#21 14.25   [fetch] sed-4.9.tar.xz from ftp.gnu.org ...
-#21 17.01   [ok]    sed-4.9.tar.xz
-#21 17.02   [fetch] gawk-5.3.2.tar.xz from ftp.gnu.org ...
-#21 22.90   [ok]    gawk-5.3.2.tar.xz
-#21 22.90   [fetch] bison-3.8.2.tar.xz from ftp.gnu.org ...
-#21 30.65   [ok]    bison-3.8.2.tar.xz
-#21 30.66   [fetch] diffutils-3.12.tar.xz from ftp.gnu.org ...
-#21 34.20   [ok]    diffutils-3.12.tar.xz
-#21 34.20   [fetch] findutils-4.10.0.tar.xz from ftp.gnu.org ...
-#21 38.81   [ok]    findutils-4.10.0.tar.xz
-#21 38.81   [fetch] patch-2.8.tar.xz from ftp.gnu.org ...
-#21 44.23   [ok]    patch-2.8.tar.xz
-#21 44.24   [fetch] tar-1.35.tar.xz from ftp.gnu.org ...
-#21 228.1   [fail]  https://ftp.gnu.org/gnu/tar/tar-1.35.tar.xz
-#21 228.1   [fetch] tar-1.35.tar.xz from mirror.csclub.uwaterloo.ca ...
-#21 231.8   [ok]    tar-1.35.tar.xz
-#21 231.8   [fetch] gzip-1.14.tar.xz from ftp.gnu.org ...
-#21 236.8   [skip]  ftp.gnu.org unreachable
-#21 236.8   [fetch] gzip-1.14.tar.xz from mirror.csclub.uwaterloo.ca ...
-#21 240.5   [ok]    gzip-1.14.tar.xz
-#21 240.5   [fetch] grep-3.12.tar.xz from ftp.gnu.org ...
-#21 245.5   [skip]  ftp.gnu.org unreachable
-#21 245.5   [fetch] grep-3.12.tar.xz from mirror.csclub.uwaterloo.ca ...
-#21 248.7   [ok]    grep-3.12.tar.xz
-#21 248.7   [fetch] gettext-0.22.5.tar.xz from ftp.gnu.org ...
-#21 253.8   [skip]  ftp.gnu.org unreachable
-#21 253.8   [fetch] gettext-0.22.5.tar.xz from mirror.csclub.uwaterloo.ca ...
-#21 257.2   [ok]    gettext-0.22.5.tar.xz
-#21 257.2   [fetch] mpfr-4.2.2.tar.xz from ftp.gnu.org ...
-#21 262.3   [skip]  ftp.gnu.org unreachable
-#21 262.3   [fetch] mpfr-4.2.2.tar.xz from mirror.csclub.uwaterloo.ca ...
-#21 264.8   [ok]    mpfr-4.2.2.tar.xz
-#21 264.8   [fetch] gmp-6.3.0.tar.xz from ftp.gnu.org ...
-#21 269.8   [skip]  ftp.gnu.org unreachable
-#21 269.8   [fetch] gmp-6.3.0.tar.xz from mirror.csclub.uwaterloo.ca ...
-#21 272.4   [ok]    gmp-6.3.0.tar.xz
-#21 272.4   [fetch] gcc-15.1.0.tar.xz from ftp.gnu.org ...
-#21 277.4   [skip]  ftp.gnu.org unreachable
-#21 277.4   [fetch] gcc-15.1.0.tar.xz from mirror.csclub.uwaterloo.ca ...
-#21 289.4   [ok]    gcc-15.1.0.tar.xz
-#21 289.4   [fetch] binutils-2.44.tar.xz from ftp.gnu.org ...
-#21 294.4   [skip]  ftp.gnu.org unreachable
-#21 294.4   [fetch] binutils-2.44.tar.xz from mirror.csclub.uwaterloo.ca ...
+#21 [temp-tools-builder  7/11] RUN /fetch_sources.sh
+#21 0.204 >>> Downloading GNU sources...
+#21 0.209   [fetch] m4-1.4.21.tar.xz from ftp.gnu.org ...
+#21 5.220   [skip]  ftp.gnu.org unreachable
+#21 5.224   [fetch] m4-1.4.21.tar.xz from mirror.csclub.uwaterloo.ca ...
+#21 8.652   [ok]    m4-1.4.21.tar.xz
+#21 8.657   [fetch] ncurses-6.6.tar.gz from ftp.gnu.org ...
+#21 13.67   [skip]  ftp.gnu.org unreachable
+#21 13.67   [fetch] ncurses-6.6.tar.gz from mirror.csclub.uwaterloo.ca ...
+#21 17.10   [ok]    ncurses-6.6.tar.gz
+#21 17.11   [fetch] sed-4.9.tar.xz from ftp.gnu.org ...
+#21 22.12   [skip]  ftp.gnu.org unreachable
+#21 22.12   [fetch] sed-4.9.tar.xz from mirror.csclub.uwaterloo.ca ...
