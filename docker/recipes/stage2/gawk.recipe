@@ -1,0 +1,1 @@
+PKG_NAME="gawk"; PKG_VER="5.3.2"; SRC_URI="https://ftpmirror.gnu.org/gawk/gawk-${PKG_VER}.tar.xz"

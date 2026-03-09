@@ -1,0 +1,1 @@
+PKG_NAME="patch"; PKG_VER="2.8"; SRC_URI="https://ftpmirror.gnu.org/patch/patch-${PKG_VER}.tar.xz"

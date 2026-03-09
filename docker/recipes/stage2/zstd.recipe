@@ -1,0 +1,4 @@
+PKG_NAME="zstd"; PKG_VER="1.5.7"; SRC_URI="https://github.com/facebook/zstd/releases/download/v${PKG_VER}/zstd-${PKG_VER}.tar.gz"
+do_configure() { true; }
+do_compile() { make $MAKEFLAGS prefix=/tools; }
+do_install() { make prefix=/tools install; }

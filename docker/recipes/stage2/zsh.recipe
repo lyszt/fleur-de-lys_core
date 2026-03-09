@@ -1,0 +1,29 @@
+PKG_NAME="zsh"
+PKG_VER="5.9"
+SRC_URI="https://sourceforge.net/projects/zsh/files/zsh/${PKG_VER}/zsh-${PKG_VER}.tar.xz"
+SRC_URI_MIRRORS="
+https://www.zsh.org/pub/zsh-${PKG_VER}.tar.xz
+https://mirrors.dotsrc.org/zsh/zsh-${PKG_VER}.tar.xz
+"
+
+do_configure() {
+    NCURSES_CFLAGS=$(pkg-config --cflags ncursesw 2>/dev/null || echo "-I/tools/include -I/tools/include/ncursesw")
+    NCURSES_LIBS=$(pkg-config --libs ncursesw 2>/dev/null || echo "-L/tools/lib -lncursesw")
+
+    CC="$LFS_TGT-gcc" \
+    CPPFLAGS="$NCURSES_CFLAGS" \
+    LDFLAGS="$NCURSES_LIBS -Wl,-rpath,/tools/lib" \
+    ./configure \
+        --prefix=/tools \
+        --host=$LFS_TGT \
+        --enable-multibyte \
+        --with-tcsetpgrp \
+        --disable-pcre \
+        --enable-cap \
+        --with-term-lib="ncursesw"
+}
+do_install() {
+    make install
+    ln -sfv /tools/bin/zsh /tools/bin/bash
+    ln -sfv /tools/bin/zsh /tools/bin/sh
+}

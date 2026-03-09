@@ -1,0 +1,9 @@
+PKG_NAME="pkgconf"
+PKG_VER="2.3.0"
+SRC_URI="https://distfiles.ariadne.space/pkgconf/pkgconf-${PKG_VER}.tar.xz"
+SRC_URI_MIRRORS="https://github.com/pkgconf/pkgconf/releases/download/pkgconf-${PKG_VER}/pkgconf-${PKG_VER}.tar.xz"
+EXTRA_CONF="--with-system-libdir=/tools/lib --with-system-includedir=/tools/include"
+do_install() {
+    make install
+    ln -sfv pkgconf /tools/bin/pkg-config
+}

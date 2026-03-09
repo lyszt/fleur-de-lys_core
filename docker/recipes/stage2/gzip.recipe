@@ -1,0 +1,1 @@
+PKG_NAME="gzip"; PKG_VER="1.14"; SRC_URI="https://ftpmirror.gnu.org/gzip/gzip-${PKG_VER}.tar.xz"

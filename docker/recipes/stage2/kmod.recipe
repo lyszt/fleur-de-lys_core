@@ -1,0 +1,5 @@
+PKG_NAME="kmod"
+PKG_VER="33"
+SRC_URI="https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-${PKG_VER}.tar.xz"
+SRC_URI_MIRRORS="https://mirrors.edge.kernel.org/pub/linux/utils/kernel/kmod/kmod-${PKG_VER}.tar.xz"
+EXTRA_CONF="--with-zstd --with-xz --with-zlib --with-openssl"

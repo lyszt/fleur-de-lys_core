@@ -1,0 +1,9 @@
+PKG_NAME="Python"
+PKG_VER="3.13.3"
+SRC_URI="https://www.python.org/ftp/python/${PKG_VER}/Python-${PKG_VER}.tar.xz"
+SRC_URI_MIRRORS="https://ftp.osuosl.org/pub/python/${PKG_VER}/Python-${PKG_VER}.tar.xz"
+EXTRA_CONF="--enable-shared --without-ensurepip --enable-optimizations"
+do_install() {
+    make install
+    ln -sfv python3 /tools/bin/python
+}

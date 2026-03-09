@@ -1,0 +1,43 @@
+PKG_NAME="gcc"
+PKG_VER="15.1.0"
+SRC_URI="https://ftpmirror.gnu.org/gcc/gcc-${PKG_VER}/gcc-${PKG_VER}.tar.xz"
+SRC_URI_DEPS="
+https://ftpmirror.gnu.org/gmp/gmp-6.3.0.tar.xz
+https://ftpmirror.gnu.org/mpfr/mpfr-4.2.2.tar.xz
+https://ftpmirror.gnu.org/mpc/mpc-1.3.1.tar.gz
+"
+
+do_configure() {
+    tar -xf /sources/gmp-6.3.0.tar.xz && mv gmp-6.3.0 gmp
+    tar -xf /sources/mpfr-4.2.2.tar.xz && mv mpfr-4.2.2 mpfr
+    tar -xf /sources/mpc-1.3.1.tar.gz && mv mpc-1.3.1 mpc
+    sed -e '/m64=/s/lib64/lib/' -i gcc/config/i386/t-linux64
+    mkdir -v build && cd build
+    ../configure --target=$LFS_TGT \
+        --prefix=/tools \
+        --with-glibc-version=2.41 \
+        --with-sysroot=/tools \
+        --with-native-system-header-dir=/include \
+        --with-newlib \
+        --without-headers \
+        --enable-default-pie \
+        --enable-default-ssp \
+        --disable-nls \
+        --disable-shared \
+        --disable-multilib \
+        --disable-threads \
+        --disable-libatomic \
+        --disable-libgomp \
+        --disable-libquadmath \
+        --disable-libssp \
+        --disable-libvtv \
+        --disable-libstdcxx \
+        --enable-languages=c,c++ \
+        CPP="$LFS_TGT-gcc -E"
+}
+do_compile() { cd build && make $MAKEFLAGS; }
+do_install() {
+    cd build && make install
+    cd ..
+    cat gcc/limitx.h gcc/glimits.h gcc/limity.h > $(dirname $($LFS_TGT-gcc -print-libgcc-file-name))/include/limits.h
+}

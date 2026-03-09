@@ -1,0 +1,1 @@
+PKG_NAME="libtool"; PKG_VER="2.5.4"; SRC_URI="https://ftpmirror.gnu.org/libtool/libtool-${PKG_VER}.tar.xz"

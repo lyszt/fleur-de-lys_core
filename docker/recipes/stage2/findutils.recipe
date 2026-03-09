@@ -1,0 +1,1 @@
+PKG_NAME="findutils"; PKG_VER="4.10.0"; SRC_URI="https://ftpmirror.gnu.org/findutils/findutils-${PKG_VER}.tar.xz"

@@ -1,0 +1,22 @@
+PKG_NAME="ncurses"
+PKG_VER="6.6"
+SRC_URI="https://ftpmirror.gnu.org/ncurses/ncurses-${PKG_VER}.tar.gz"
+
+do_configure() {
+    ./configure --prefix=/tools \
+        --host=$LFS_TGT \
+        --with-build-cc=gcc \
+        --with-shared \
+        --without-debug \
+        --without-ada \
+        --without-normal \
+        --with-cxx-shared \
+        --enable-widec \
+        --enable-pc-files \
+        --with-pkg-config-libdir=/tools/lib/pkgconfig
+}
+do_install() {
+    make install
+    ln -sfv libncursesw.so /tools/lib/libncurses.so
+    ln -sfv libncursesw.a /tools/lib/libncurses.a
+}

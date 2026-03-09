@@ -1,0 +1,1 @@
+PKG_NAME="diffutils"; PKG_VER="3.12"; SRC_URI="https://ftpmirror.gnu.org/diffutils/diffutils-${PKG_VER}.tar.xz"

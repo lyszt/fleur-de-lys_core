@@ -1,0 +1,24 @@
+PKG_NAME="glibc"
+PKG_VER="2.41"
+SRC_URI="https://ftpmirror.gnu.org/glibc/glibc-${PKG_VER}.tar.xz"
+
+GLIBC_CFLAGS="-O3 -march=native -fprofile-use"
+
+do_configure() {
+    mkdir -pv /tools/lib
+    ln -sfv ../lib/ld-linux-x86-64.so.2 /tools/lib64
+    ln -sfv ld-linux-x86-64.so.2 /tools/lib/ld-lsb-x86-64.so.3
+    mkdir -v build && cd build
+    echo "rootsbindir=/tools/sbin" > configparms
+    CFLAGS="$GLIBC_CFLAGS" ../configure --prefix=/tools \
+        --host=$LFS_TGT \
+        --build=$(../scripts/config.guess) \
+        --enable-kernel=5.4 \
+        --with-headers=/tools/include \
+        libc_cv_slibdir=/tools/lib \
+        libc_cv_rtlddir=/tools/lib
+}
+do_compile() { cd build && make -j4 CFLAGS="$GLIBC_CFLAGS"; }
+do_install() {
+    cd build && make -j1 install
+}

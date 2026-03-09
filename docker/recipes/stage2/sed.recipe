@@ -1,0 +1,1 @@
+PKG_NAME="sed"; PKG_VER="4.9"; SRC_URI="https://ftpmirror.gnu.org/sed/sed-${PKG_VER}.tar.xz"

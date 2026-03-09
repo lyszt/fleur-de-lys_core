@@ -1,0 +1,15 @@
+PKG_NAME="zen-kernel"
+PKG_VER="v6.13-zen1"
+SRC_URI="https://github.com/zen-kernel/zen-kernel/archive/refs/tags/${PKG_VER}.tar.gz"
+
+# Headers-only stage; scheduler selection applies when building a bootable kernel.
+# Accepted values: zen (default), bore, sched-ext.
+KERNEL_SCHED_FLAVOR="${KERNEL_SCHED_FLAVOR:-zen}"
+
+do_configure() { make mrproper; }
+do_compile() { make headers; }
+do_install() {
+    find usr/include -type f ! -name '*.h' -delete
+    mkdir -pv /tools/include
+    cp -rv usr/include/* /tools/include/
+}

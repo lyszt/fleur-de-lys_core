@@ -1,0 +1,1 @@
+PKG_NAME="grep"; PKG_VER="3.12"; SRC_URI="https://ftpmirror.gnu.org/grep/grep-${PKG_VER}.tar.xz"

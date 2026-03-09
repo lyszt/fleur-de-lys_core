@@ -1,0 +1,6 @@
+PKG_NAME="ninja"
+PKG_VER="1.12.1"
+SRC_URI="https://github.com/ninja-build/ninja/archive/refs/tags/v${PKG_VER}.tar.gz"
+do_configure() { python /tools/bin/python configure.py --bootstrap; }
+do_compile() { true; }
+do_install() { install -vm755 ninja /tools/bin/; }

@@ -1,8 +1,6 @@
-# Ignore everything by default
+cat << 'EOF' > .dockerignore
 *
-
-# Only allow what the build actually needs
-!scripts/build_toolchain.sh
-!scripts/build_temptools.sh
-!scripts/build_glibc.sh
-!scripts/fetch_sources.sh
+!Dockerfile
+!engine/
+!recipes/
+EOF

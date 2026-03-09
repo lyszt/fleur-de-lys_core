@@ -1,0 +1,17 @@
+PKG_NAME="binutils"
+PKG_VER="2.44"
+SRC_URI="https://ftpmirror.gnu.org/binutils/binutils-${PKG_VER}.tar.xz"
+
+do_configure() {
+    mkdir -v build && cd build
+    ../configure --prefix=/tools \
+        --with-sysroot=/tools \
+        --target=$LFS_TGT \
+        --disable-nls \
+        --enable-gprofng=no \
+        --disable-werror \
+        --enable-new-dtags \
+        --enable-default-hash-style=gnu
+}
+do_compile() { cd build && make $MAKEFLAGS; }
+do_install() { cd build && make install; }

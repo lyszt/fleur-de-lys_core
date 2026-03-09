@@ -1,0 +1,1 @@
+PKG_NAME="make"; PKG_VER="4.4.1"; SRC_URI="https://ftpmirror.gnu.org/make/make-${PKG_VER}.tar.gz"; EXTRA_CONF="--without-guile"

@@ -1,0 +1,1 @@
+PKG_NAME="tar"; PKG_VER="1.35"; SRC_URI="https://ftpmirror.gnu.org/tar/tar-${PKG_VER}.tar.xz"

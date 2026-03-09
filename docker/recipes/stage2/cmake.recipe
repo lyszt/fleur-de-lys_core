@@ -1,0 +1,4 @@
+PKG_NAME="cmake"
+PKG_VER="3.31.6"
+SRC_URI="https://github.com/Kitware/CMake/releases/download/v${PKG_VER}/cmake-${PKG_VER}.tar.gz"
+do_configure() { ./bootstrap --prefix=/tools --no-system-libs --parallel=$(nproc); }

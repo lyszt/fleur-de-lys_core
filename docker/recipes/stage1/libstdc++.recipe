@@ -1,0 +1,19 @@
+PKG_NAME="gcc"
+PKG_VER="15.1.0"
+
+do_configure() {
+    mkdir -v build && cd build
+    ../libstdc++-v3/configure --host=$LFS_TGT \
+        --build=$(../config.guess) \
+        --prefix=/tools \
+        --disable-multilib \
+        --disable-nls \
+        --disable-libstdcxx-pch \
+        --with-gxx-include-dir=/tools/$LFS_TGT/include/c++/15.1.0
+}
+do_compile() { cd build && make $MAKEFLAGS; }
+do_install() {
+    cd build && make install
+    rm -v /tools/lib/libstdc++*.la || true
+    rm -v /tools/lib/libsupc++.la || true
+}
