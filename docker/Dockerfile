@@ -9,7 +9,7 @@
 # -----------------------------------------------------------------------------
 # STAGE 1: toolchain-builder
 # -----------------------------------------------------------------------------
-FROM archlinux:latest AS toolchain-builder
+FROM archlinux@sha256:6417af93a50740f2c88503b098e780c9edf5ee00aa156021c28bcfffe226f57d AS toolchain-builder
 ENV LC_ALL=POSIX
 ENV LFS_TGT=x86_64-fleur-linux-gnu
 ENV PATH=/tools/bin:/usr/bin:/bin
@@ -44,7 +44,7 @@ RUN rm -rf /sources /build_toolchain.sh /build_glibc.sh
 # -----------------------------------------------------------------------------
 # STAGE 2: temp-tools-builder
 # -----------------------------------------------------------------------------
-FROM archlinux:latest AS temp-tools-builder
+FROM archlinux@sha256:6417af93a50740f2c88503b098e780c9edf5ee00aa156021c28bcfffe226f57d AS temp-tools-builder
 ENV LC_ALL=POSIX
 ENV LFS_TGT=x86_64-fleur-linux-gnu
 ENV PATH=/tools/bin:/usr/bin:/bin
@@ -78,7 +78,7 @@ RUN rm -rf /sources /fetch_sources.sh /build_temptools.sh
 # -----------------------------------------------------------------------------
 # STAGE 3: final — clean slate, copy only /tools
 # -----------------------------------------------------------------------------
-FROM archlinux:latest AS final
+FROM archlinux@sha256:6417af93a50740f2c88503b098e780c9edf5ee00aa156021c28bcfffe226f57d AS final
 
 RUN pacman -Syu --noconfirm && \
     pacman -S --noconfirm \

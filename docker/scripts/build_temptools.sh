@@ -9,7 +9,14 @@ LFS_TGT=x86_64-fleur-linux-gnu
 TOOLS=/tools
 SOURCES=/sources
 MAKEFLAGS="-j$(nproc)"
-PATH=/tools/bin:/usr/bin:/bin
+
+# Isolate the environment to prevent host system contamination
+export PATH=/tools/bin:/usr/bin:/bin
+export CPATH="/tools/include"
+export LIBRARY_PATH="/tools/lib"
+export PKG_CONFIG_PATH=""
+export PKG_CONFIG_LIBDIR="/tools/lib/pkgconfig"
+export PKG_CONFIG_SYSROOT_DIR="/"
 
 cd $SOURCES
 
@@ -46,7 +53,7 @@ PKGCONF_VER=2.3.0
 MAKE_VER=4.4.1
 
 # ---------------------------------------------------------------------------
-# Verify sources are present — downloads handled by fetch_sources.sh
+# Verify sources are present
 # ---------------------------------------------------------------------------
 echo ">>> Verifying sources..."
 MISSING=0
@@ -75,19 +82,73 @@ fi
 echo ">>> All sources present."
 
 # ---------------------------------------------------------------------------
-# Helper: build_autotools <srcdir> [extra configure args...]
+# Adaptive Build Engine
+# Evaluates configure/make exit codes, parses logs for known cross-compilation
+# failure heuristics, applies dynamic patches to the environment, and retries.
 # ---------------------------------------------------------------------------
 build_autotools() {
   local DIR=$1
   shift
+  local ATTEMPT=1
+  local MAX_RETRIES=2
+  local DYNAMIC_CFLAGS=""
+  local DYNAMIC_LDFLAGS=""
+  local DYNAMIC_MAKEFLAGS="$MAKEFLAGS"
+
   cd $SOURCES
   tar -xf ${DIR}.tar.* 2>/dev/null || tar -xf ${DIR}.tar.gz
-  cd $DIR
-  ./configure --prefix=/tools "$@"
-  make $MAKEFLAGS
-  make install
-  cd $SOURCES
-  rm -rf $DIR
+
+  while [ $ATTEMPT -le $MAX_RETRIES ]; do
+    echo ">>> Building $DIR (Attempt $ATTEMPT/$MAX_RETRIES)..."
+    cd $SOURCES/$DIR
+
+    [ $ATTEMPT -gt 1 ] && make distclean 2>/dev/null || true
+
+    set +e
+    ./configure --prefix=/tools --host=$LFS_TGT \
+      CFLAGS="$DYNAMIC_CFLAGS" LDFLAGS="$DYNAMIC_LDFLAGS" "$@"
+    CONFIG_RC=$?
+    set -e
+
+    if [ $CONFIG_RC -eq 0 ]; then
+      set +e
+      make $DYNAMIC_MAKEFLAGS
+      MAKE_RC=$?
+      set -e
+
+      if [ $MAKE_RC -eq 0 ]; then
+        make install
+        cd $SOURCES
+        rm -rf $DIR
+        return 0
+      fi
+
+      echo "!!! Make failed for $DIR."
+      if [ "$DYNAMIC_MAKEFLAGS" != "-j1" ]; then
+        echo ">>> Auto-correction: Suspected race condition. Retrying sequentially (-j1)..."
+        DYNAMIC_MAKEFLAGS="-j1"
+      else
+        exit 1
+      fi
+    else
+      echo "!!! Configure failed for $DIR. Analyzing config.log..."
+      if grep -q "C compiler cannot create executables" config.log; then
+        echo ">>> Auto-correction: Compiler sanity check failed. Injecting library search paths..."
+        DYNAMIC_LDFLAGS="-L/tools/lib -Wl,-rpath,/tools/lib"
+      elif grep -q "No terminal handling library was found" config.log || grep -q "tigetstr" config.log; then
+        echo ">>> Auto-correction: Terminal library linkage unresolvable. Forcing ncursesw..."
+        DYNAMIC_LDFLAGS="$DYNAMIC_LDFLAGS -lncursesw"
+      else
+        echo "!!! Unrecoverable configuration error."
+        tail -n 60 config.log
+        exit 1
+      fi
+    fi
+    ATTEMPT=$((ATTEMPT + 1))
+  done
+
+  echo "!!! Exhausted all correction attempts for $DIR."
+  exit 1
 }
 
 # ---------------------------------------------------------------------------
@@ -97,19 +158,32 @@ echo ">>> Building m4..."
 build_autotools m4-${M4_VER}
 
 # ---------------------------------------------------------------------------
-# 2. Ncurses
+# 2. Pkgconf (Moved up to provide linkage metadata for ncurses/zsh)
+# ---------------------------------------------------------------------------
+echo ">>> Building pkgconf..."
+build_autotools pkgconf-${PKGCONF_VER} \
+  --with-system-libdir=/tools/lib \
+  --with-system-includedir=/tools/include
+ln -sfv pkgconf /tools/bin/pkg-config
+
+# ---------------------------------------------------------------------------
+# 3. Ncurses (Configured to generate .pc files for pkg-config)
 # ---------------------------------------------------------------------------
 echo ">>> Building ncurses..."
 tar -xf ncurses-${NCURSES_VER}.tar.gz
 cd ncurses-${NCURSES_VER}
 ./configure \
   --prefix=/tools \
+  --host=$LFS_TGT \
+  --with-build-cc=gcc \
   --with-shared \
   --without-debug \
   --without-ada \
   --without-normal \
   --with-cxx-shared \
-  --enable-widec
+  --enable-widec \
+  --enable-pc-files \
+  --with-pkg-config-libdir=/tools/lib/pkgconfig
 make $MAKEFLAGS
 make install
 ln -sfv libncursesw.so /tools/lib/libncurses.so
@@ -118,21 +192,36 @@ cd $SOURCES
 rm -rf ncurses-${NCURSES_VER}
 
 # ---------------------------------------------------------------------------
-# 3. Zsh — primary shell
+# 4. Zsh — primary shell
 # ---------------------------------------------------------------------------
 echo ">>> Building zsh..."
 tar -xf zsh-${ZSH_VER}.tar.xz
 cd zsh-${ZSH_VER}
-./configure \
+
+# Extract exact flags using the newly built pkg-config
+NCURSES_CFLAGS=$(pkg-config --cflags ncursesw 2>/dev/null || echo "-I/tools/include -I/tools/include/ncursesw")
+NCURSES_LIBS=$(pkg-config --libs ncursesw 2>/dev/null || echo "-L/tools/lib -lncursesw")
+
+set +e
+CC="$LFS_TGT-gcc" \
+  CPPFLAGS="$NCURSES_CFLAGS" \
+  LDFLAGS="$NCURSES_LIBS -Wl,-rpath,/tools/lib" \
+  ./configure \
   --prefix=/tools \
+  --host=$LFS_TGT \
   --enable-multibyte \
   --with-tcsetpgrp \
   --disable-pcre \
   --enable-cap \
-  --with-term-lib="ncursesw" \
-  CPPFLAGS="-I/tools/include" \
-  LDFLAGS="-L/tools/lib" \
-  LIBS="-lncursesw"
+  --with-term-lib="ncursesw"
+CONFIGURE_RC=$?
+set -e
+
+if [ $CONFIGURE_RC -ne 0 ]; then
+  echo "=== zsh configure failed (exit $CONFIGURE_RC) — config.log ==="
+  cat config.log
+  exit 1
+fi
 make $MAKEFLAGS
 make install
 ln -sfv /tools/bin/zsh /tools/bin/bash
@@ -141,67 +230,67 @@ cd $SOURCES
 rm -rf zsh-${ZSH_VER}
 
 # ---------------------------------------------------------------------------
-# 4. Make
+# 5. Make
 # ---------------------------------------------------------------------------
 echo ">>> Building make..."
 build_autotools make-${MAKE_VER} --without-guile
 
 # ---------------------------------------------------------------------------
-# 5. Sed
+# 6. Sed
 # ---------------------------------------------------------------------------
 echo ">>> Building sed..."
 build_autotools sed-${SED_VER}
 
 # ---------------------------------------------------------------------------
-# 6. Gawk
+# 7. Gawk
 # ---------------------------------------------------------------------------
 echo ">>> Building gawk..."
 build_autotools gawk-${GAWK_VER}
 
 # ---------------------------------------------------------------------------
-# 7. Bison
+# 8. Bison
 # ---------------------------------------------------------------------------
 echo ">>> Building bison..."
 build_autotools bison-${BISON_VER}
 
 # ---------------------------------------------------------------------------
-# 8. Diffutils
+# 9. Diffutils
 # ---------------------------------------------------------------------------
 echo ">>> Building diffutils..."
 build_autotools diffutils-${DIFFUTILS_VER}
 
 # ---------------------------------------------------------------------------
-# 9. Findutils
+# 10. Findutils
 # ---------------------------------------------------------------------------
 echo ">>> Building findutils..."
 build_autotools findutils-${FINDUTILS_VER}
 
 # ---------------------------------------------------------------------------
-# 10. Patch
+# 11. Patch
 # ---------------------------------------------------------------------------
 echo ">>> Building patch..."
 build_autotools patch-${PATCH_VER}
 
 # ---------------------------------------------------------------------------
-# 11. Tar
+# 12. Tar
 # ---------------------------------------------------------------------------
 echo ">>> Building tar..."
 build_autotools tar-${TAR_VER}
 
 # ---------------------------------------------------------------------------
-# 12. Gzip
+# 13. Gzip
 # ---------------------------------------------------------------------------
 echo ">>> Building gzip..."
 build_autotools gzip-${GZIP_VER}
 
 # ---------------------------------------------------------------------------
-# 13. Grep
+# 14. Grep
 # ---------------------------------------------------------------------------
 echo ">>> Building grep..."
 build_autotools grep-${GREP_VER}
 
 # ---------------------------------------------------------------------------
-# 14. Gettext (tools only, not the full library)
+# 15. Gettext (tools only, not the full library)
 # ---------------------------------------------------------------------------
 echo ">>> Building gettext..."
 tar -xf gettext-${GETTEXT_VER}.tar.xz
@@ -213,7 +302,7 @@ cd $SOURCES
 rm -rf gettext-${GETTEXT_VER}
 
 # ---------------------------------------------------------------------------
-# 15. Zstd
+# 16. Zstd
 # ---------------------------------------------------------------------------
 echo ">>> Building zstd..."
 tar -xf zstd-${ZSTD_VER}.tar.gz
@@ -222,15 +311,6 @@ make $MAKEFLAGS prefix=/tools
 make prefix=/tools install
 cd $SOURCES
 rm -rf zstd-${ZSTD_VER}
-
-# ---------------------------------------------------------------------------
-# 16. Pkgconf
-# ---------------------------------------------------------------------------
-echo ">>> Building pkgconf..."
-build_autotools pkgconf-${PKGCONF_VER} \
-  --with-system-libdir=/tools/lib \
-  --with-system-includedir=/tools/include
-ln -sfv pkgconf /tools/bin/pkg-config
 
 # ---------------------------------------------------------------------------
 # 17. Libtool
@@ -369,7 +449,7 @@ mkdir -v build && cd build
   --target=$LFS_TGT \
   LDFLAGS_FOR_TARGET="-L$PWD/$LFS_TGT/libgcc" \
   --prefix=/tools \
-  --with-build-sysroot=/ \
+  --with-build-sysroot=/tools \
   --enable-default-pie \
   --enable-default-ssp \
   --disable-nls \
