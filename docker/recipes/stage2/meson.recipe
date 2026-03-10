@@ -1,6 +1,7 @@
 PKG_NAME="meson"
 PKG_VER="1.7.0"
 SRC_URI="https://github.com/mesonbuild/meson/releases/download/${PKG_VER}/meson-${PKG_VER}.tar.gz"
+SRC_URI_MIRRORS="https://codeload.github.com/mesonbuild/meson/tar.gz/refs/tags/${PKG_VER}"
 do_configure() { true; }
 do_compile() { true; }
 do_install() { /tools/bin/python setup.py install --prefix=/tools; }

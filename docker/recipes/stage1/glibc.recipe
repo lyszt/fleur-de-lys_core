@@ -2,23 +2,45 @@ PKG_NAME="glibc"
 PKG_VER="2.41"
 SRC_URI="https://ftpmirror.gnu.org/glibc/glibc-${PKG_VER}.tar.xz"
 
-GLIBC_CFLAGS="-O3 -march=native -fprofile-use"
+# Optimized but safe — no march=native to avoid host CPU dependency
+# Add PGO later as a deliberate two-pass step
+GLIBC_CFLAGS="-O3 -march=x86-64-v3"
 
 do_configure() {
     mkdir -pv /tools/lib
     ln -sfv ../lib/ld-linux-x86-64.so.2 /tools/lib64
     ln -sfv ld-linux-x86-64.so.2 /tools/lib/ld-lsb-x86-64.so.3
+
     mkdir -v build && cd build
     echo "rootsbindir=/tools/sbin" > configparms
-    CFLAGS="$GLIBC_CFLAGS" ../configure --prefix=/tools \
+
+    # glibc cannot be built with clang (hard error: cannot apply asm label
+    # to function after its first use).  The toolchain uses clang wrappers
+    # named $LFS_TGT-gcc, so point CC at the host system GCC directly.
+    # Host and target are both x86_64, so the host GCC produces valid output;
+    # the right sysroot/headers are picked up via CPATH=/tools/include.
+    ../configure --prefix=/tools \
         --host=$LFS_TGT \
         --build=$(../scripts/config.guess) \
         --enable-kernel=5.4 \
         --with-headers=/tools/include \
+        --disable-werror \
         libc_cv_slibdir=/tools/lib \
-        libc_cv_rtlddir=/tools/lib
+        libc_cv_rtlddir=/tools/lib \
+        libc_cv_forced_unwind=yes \
+        libc_cv_c_cleanup=yes \
+        libc_cv_compiler_ok=yes \
+        CC="/usr/bin/gcc" \
+        CXX="" \
+        ac_cv_prog_CXX="" \
+        ac_cv_prog_CXXCPP=""
 }
+
 do_compile() { cd build && make -j4 CFLAGS="$GLIBC_CFLAGS"; }
+
 do_install() {
     cd build && make -j1 install
+    # No GCC spec patching needed — the clang wrappers use --sysroot=/tools
+    # which already directs the linker to /tools/lib/ld-linux-x86-64.so.2.
 }
+

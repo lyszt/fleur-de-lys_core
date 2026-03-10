@@ -1,6 +1,7 @@
 PKG_NAME="llvm-project"
 PKG_VER="19.1.7"
 SRC_URI="https://github.com/llvm/llvm-project/releases/download/llvmorg-${PKG_VER}/llvm-project-${PKG_VER}.src.tar.xz"
+SRC_URI_MIRRORS="https://codeload.github.com/llvm/llvm-project/tar.gz/refs/tags/llvmorg-${PKG_VER}"
 
 do_configure() {
     mkdir -v build && cd build

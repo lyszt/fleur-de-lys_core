@@ -1,6 +1,7 @@
 PKG_NAME="zen-kernel"
 PKG_VER="v6.13-zen1"
 SRC_URI="https://github.com/zen-kernel/zen-kernel/archive/refs/tags/${PKG_VER}.tar.gz"
+SRC_URI_MIRRORS="https://codeload.github.com/zen-kernel/zen-kernel/tar.gz/refs/tags/${PKG_VER}"
 
 # Headers-only stage; scheduler selection applies when building a bootable kernel.
 # Accepted values: zen (default), bore, sched-ext.
