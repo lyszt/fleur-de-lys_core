@@ -4,4 +4,9 @@ SRC_URI="https://github.com/mesonbuild/meson/releases/download/${PKG_VER}/meson-
 SRC_URI_MIRRORS="https://codeload.github.com/mesonbuild/meson/tar.gz/refs/tags/${PKG_VER}"
 do_configure() { true; }
 do_compile() { true; }
-do_install() { /tools/bin/python setup.py install --prefix=/tools; }
+do_install() {
+    mkdir -p /tools/lib/python3.13/site-packages/
+    cp -rv mesonbuild /tools/lib/python3.13/site-packages/
+    install -vm755 meson.py /tools/bin/meson
+    /tools/bin/python3 -c "import mesonbuild"
+}

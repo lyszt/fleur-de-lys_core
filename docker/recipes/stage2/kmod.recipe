@@ -4,4 +4,4 @@ SRC_URI="https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-${PKG_VER}.tar.
 SRC_URI_MIRRORS="https://mirrors.edge.kernel.org/pub/linux/utils/kernel/kmod/kmod-${PKG_VER}.tar.xz \
 https://mirrors.kernel.org/pub/linux/utils/kernel/kmod/kmod-${PKG_VER}.tar.xz \
 https://ftp.osuosl.org/pub/kernel.org/linux/utils/kernel/kmod/kmod-${PKG_VER}.tar.xz"
-EXTRA_CONF="--with-zstd --with-xz --with-zlib --with-openssl"
+EXTRA_CONF="--with-zstd --disable-manpages"
