@@ -1,1 +1,13 @@
-PKG_NAME="tar"; PKG_VER="1.35"; SRC_URI="https://ftpmirror.gnu.org/tar/tar-${PKG_VER}.tar.xz"
+PKG_NAME="tar"
+PKG_VER="1.35"
+SRC_URI="https://ftpmirror.gnu.org/tar/tar-${PKG_VER}.tar.xz"
+
+do_configure() {
+    ./configure --prefix=/tools \
+        ac_cv_func_working_getgroups=yes \
+        gl_cv_func_working_getgroups=yes
+}
+
+do_compile() {
+    make $MAKEFLAGS CFLAGS="$CFLAGS -Wno-error -Wno-incompatible-pointer-types"
+}

@@ -11,10 +11,13 @@ do_configure() {
         --with-cxx-shared \
         --enable-widec \
         --enable-pc-files \
-        --with-pkg-config-libdir=/tools/lib/pkgconfig
+        --with-pkg-config-libdir=/tools/lib/pkgconfig \
+        --with-extra-ld-flags="$LDFLAGS"
 }
+
 do_install() {
     make install
     ln -sfv libncursesw.so /tools/lib/libncurses.so
     ln -sfv libncursesw.a /tools/lib/libncurses.a
 }
+

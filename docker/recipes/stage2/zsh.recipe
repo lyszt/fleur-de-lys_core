@@ -9,19 +9,23 @@ https://mirrors.dotsrc.org/zsh/zsh-${PKG_VER}.tar.xz
 do_configure() {
     NCURSES_CFLAGS=$(pkg-config --cflags ncursesw 2>/dev/null || echo "-I/tools/include -I/tools/include/ncursesw")
     NCURSES_LIBS=$(pkg-config --libs ncursesw 2>/dev/null || echo "-L/tools/lib -lncursesw")
-
     CPPFLAGS="$NCURSES_CFLAGS" \
-    LDFLAGS="$NCURSES_LIBS -Wl,-rpath,/tools/lib" \
+    LDFLAGS="$LDFLAGS $NCURSES_LIBS" \
+    ac_cv_func_working_getgroups=yes \
     ./configure \
         --prefix=/tools \
+        --build=x86_64-pc-linux-gnu \
+        --host=x86_64-pc-linux-gnu \
         --enable-multibyte \
         --with-tcsetpgrp \
         --disable-pcre \
         --enable-cap \
         --with-term-lib="ncursesw"
 }
+
 do_install() {
     make install
     ln -sfv /tools/bin/zsh /tools/bin/bash
     ln -sfv /tools/bin/zsh /tools/bin/sh
 }
+

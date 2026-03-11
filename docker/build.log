@@ -5,11 +5,11 @@
 #1 DONE 0.0s
 
 #2 [internal] load build definition from Dockerfile
-#2 transferring dockerfile: 8.18kB done
+#2 transferring dockerfile: 9.69kB done
 #2 DONE 0.0s
 
 #3 [internal] load metadata for docker.io/library/archlinux@sha256:6417af93a50740f2c88503b098e780c9edf5ee00aa156021c28bcfffe226f57d
-#3 DONE 0.0s
+#3 DONE 0.1s
 
 #4 [internal] load .dockerignore
 #4 transferring context: 106B done
@@ -23,187 +23,1007 @@
 #6 CACHED
 
 #7 [internal] load build context
-#7 transferring context: 10.41kB done
+#7 transferring context: 2.09kB done
 #7 DONE 0.0s
 
-#8 [toolchain-builder  8/17] COPY recipes/stage1/ /recipes/stage1/
+#8 [toolchain-builder 16/17] RUN --mount=type=cache,target=/sources fleur-build   /recipes/stage1/glibc.recipe
 #8 CACHED
 
-#9 [temp-tools-builder  3/60] COPY --from=toolchain-builder /tools /tools
+#9 [temp-tools-builder  2/60] RUN pacman -Syu --noconfirm &&     pacman -S --noconfirm         base-devel gcc clang lld binutils make cmake ninja         autoconf automake libtool pkgconf bison flex m4         gmp mpfr libmpc openssl libelf ncurses         bzip2 gzip xz zstd curl wget git rsync         python perl texinfo gettext bc &&     pacman -Scc --noconfirm &&     rm -rf /var/cache/pacman/pkg/*
 #9 CACHED
 
-#10 [toolchain-builder 15/17] RUN fetch_sources /recipes/stage1/glibc.recipe
+#10 [toolchain-builder 14/17] RUN --mount=type=cache,target=/sources fleur-build /recipes/stage1/zen-kernel.recipe
 #10 CACHED
 
-#11 [toolchain-builder 16/17] RUN fleur-build   /recipes/stage1/glibc.recipe
+#11 [temp-tools-builder  4/60] RUN mkdir -pv /sources /engine /recipes
 #11 CACHED
 
 #12 [toolchain-builder  3/17] RUN mkdir -pv /tools /sources /engine /recipes
 #12 CACHED
 
-#13 [toolchain-builder 13/17] RUN fleur-build /recipes/stage1/llvm-bootstrap.recipe
+#13 [toolchain-builder 13/17] RUN --mount=type=cache,target=/sources fleur-build /recipes/stage1/llvm-bootstrap.recipe
 #13 CACHED
 
-#14 [temp-tools-builder  5/60] COPY engine/fleur-build.sh /usr/bin/fleur-build
+#14 [toolchain-builder  2/17] RUN pacman -Syu --noconfirm &&     pacman -S --noconfirm         base-devel gcc clang lld binutils make cmake ninja         autoconf automake libtool pkgconf bison flex m4         gmp mpfr libmpc openssl libelf ncurses         bzip2 gzip xz zstd curl wget git rsync         python perl texinfo gettext bc &&     pacman -Scc --noconfirm &&     rm -rf /var/cache/pacman/pkg/*
 #14 CACHED
 
-#15 [toolchain-builder 10/17] RUN fetch_sources /recipes/stage1/llvm-bootstrap.recipe
+#15 [toolchain-builder  5/17] RUN chmod +x /usr/bin/fleur-build
 #15 CACHED
 
-#16 [toolchain-builder  6/17] COPY engine/fetch_sources.sh /usr/bin/fetch_sources
+#16 [toolchain-builder  4/17] COPY engine/fleur-build.sh /usr/bin/fleur-build
 #16 CACHED
 
-#17 [toolchain-builder  9/17] RUN fetch_sources /recipes/stage1/binutils-pass1.recipe
+#17 [toolchain-builder 17/17] RUN rm -rf /recipes/stage1
 #17 CACHED
 
-#18 [toolchain-builder 12/17] RUN fleur-build /recipes/stage1/binutils-pass1.recipe
+#18 [temp-tools-builder  6/60] RUN chmod +x /usr/bin/fleur-build
 #18 CACHED
 
-#19 [toolchain-builder 11/17] RUN fetch_sources /recipes/stage1/zen-kernel.recipe
+#19 [toolchain-builder 11/17] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage1/zen-kernel.recipe
 #19 CACHED
 
-#20 [toolchain-builder  7/17] RUN chmod +x /usr/bin/fetch_sources
+#20 [temp-tools-builder  3/60] COPY --from=toolchain-builder /tools /tools
 #20 CACHED
 
-#21 [temp-tools-builder  7/60] COPY engine/fetch_sources.sh /usr/bin/fetch_sources
+#21 [toolchain-builder  6/17] COPY engine/fetch_sources.sh /usr/bin/fetch_sources
 #21 CACHED
 
-#22 [temp-tools-builder  2/60] RUN pacman -Syu --noconfirm &&     pacman -S --noconfirm         base-devel gcc clang lld binutils make cmake ninja         autoconf automake libtool pkgconf bison flex m4         gmp mpfr libmpc openssl libelf ncurses         bzip2 gzip xz zstd curl wget git rsync         python perl texinfo gettext bc &&     pacman -Scc --noconfirm &&     rm -rf /var/cache/pacman/pkg/*
+#22 [toolchain-builder  8/17] COPY recipes/stage1/ /recipes/stage1/
 #22 CACHED
 
-#23 [temp-tools-builder  6/60] RUN chmod +x /usr/bin/fleur-build
+#23 [toolchain-builder 15/17] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage1/glibc.recipe
 #23 CACHED
 
-#24 [toolchain-builder 14/17] RUN fleur-build /recipes/stage1/zen-kernel.recipe
+#24 [toolchain-builder  9/17] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage1/binutils-pass1.recipe
 #24 CACHED
 
-#25 [temp-tools-builder  4/60] RUN mkdir -pv /sources /engine /recipes
+#25 [toolchain-builder 12/17] RUN --mount=type=cache,target=/sources fleur-build /recipes/stage1/binutils-pass1.recipe
 #25 CACHED
 
-#26 [toolchain-builder  2/17] RUN pacman -Syu --noconfirm &&     pacman -S --noconfirm         base-devel gcc clang lld binutils make cmake ninja         autoconf automake libtool pkgconf bison flex m4         gmp mpfr libmpc openssl libelf ncurses         bzip2 gzip xz zstd curl wget git rsync         python perl texinfo gettext bc &&     pacman -Scc --noconfirm &&     rm -rf /var/cache/pacman/pkg/*
+#26 [toolchain-builder  7/17] RUN chmod +x /usr/bin/fetch_sources
 #26 CACHED
 
-#27 [toolchain-builder 17/17] RUN rm -rf /sources /recipes/stage1
+#27 [toolchain-builder 10/17] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage1/llvm-bootstrap.recipe
 #27 CACHED
 
-#28 [toolchain-builder  4/17] COPY engine/fleur-build.sh /usr/bin/fleur-build
+#28 [temp-tools-builder  5/60] COPY engine/fleur-build.sh /usr/bin/fleur-build
 #28 CACHED
 
-#29 [toolchain-builder  5/17] RUN chmod +x /usr/bin/fleur-build
+#29 [temp-tools-builder  7/60] COPY engine/fetch_sources.sh /usr/bin/fetch_sources
 #29 CACHED
 
 #30 [temp-tools-builder  8/60] RUN chmod +x /usr/bin/fetch_sources
 #30 CACHED
 
 #31 [temp-tools-builder  9/60] COPY recipes/stage2/ /recipes/stage2/
-#31 DONE 0.0s
+#31 DONE 0.1s
 
-#32 [temp-tools-builder 10/60] RUN fetch_sources /recipes/stage2/m4.recipe
-#32 0.206 >>> Fetching sources for m4 1.4.21
-#32 0.214   [fetch] m4-1.4.21.tar.xz from ftp.gnu.org ...
-#32 5.225   [skip]  ftp.gnu.org unreachable
-#32 5.228   [fetch] m4-1.4.21.tar.xz from mirror.csclub.uwaterloo.ca ...
-#32 8.751   [ok]    m4-1.4.21.tar.xz
-#32 8.751 >>> All sources downloaded successfully.
-#32 DONE 8.8s
+#32 [temp-tools-builder 10/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/m4.recipe
+#32 0.224 >>> Fetching sources for m4 1.4.21
+#32 0.225   [cache] m4-1.4.21.tar.xz
+#32 0.225 >>> All sources downloaded successfully.
+#32 DONE 0.3s
 
-#33 [temp-tools-builder 11/60] RUN fetch_sources /recipes/stage2/pkgconf.recipe
-#33 0.197 >>> Fetching sources for pkgconf 2.3.0
-#33 0.205   [fetch] pkgconf-2.3.0.tar.xz from distfiles.ariadne.space ...
-#33 3.516   [ok]    pkgconf-2.3.0.tar.xz
-#33 3.516 >>> All sources downloaded successfully.
-#33 DONE 3.5s
+#33 [temp-tools-builder 11/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/pkgconf.recipe
+#33 0.227 >>> Fetching sources for pkgconf 2.3.0
+#33 0.228   [cache] pkgconf-2.3.0.tar.xz
+#33 0.228 >>> All sources downloaded successfully.
+#33 DONE 0.3s
 
-#34 [temp-tools-builder 12/60] RUN fetch_sources /recipes/stage2/ncurses.recipe
-#34 0.123 >>> Fetching sources for ncurses 6.6
-#34 0.127   [fetch] ncurses-6.6.tar.gz from ftp.gnu.org ...
-#34 5.135   [skip]  ftp.gnu.org unreachable
-#34 5.138   [fetch] ncurses-6.6.tar.gz from mirror.csclub.uwaterloo.ca ...
-#34 10.08   [ok]    ncurses-6.6.tar.gz
-#34 10.08 >>> All sources downloaded successfully.
-#34 DONE 10.1s
+#34 [temp-tools-builder 12/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/ncurses.recipe
+#34 0.235 >>> Fetching sources for ncurses 6.6
+#34 0.236   [cache] ncurses-6.6.tar.gz
+#34 0.237 >>> All sources downloaded successfully.
+#34 DONE 0.3s
 
-#35 [temp-tools-builder 13/60] RUN fetch_sources /recipes/stage2/zsh.recipe
-#35 0.191 >>> Fetching sources for zsh 5.9
-#35 0.201   [fetch] zsh-5.9.tar.xz from sourceforge.net ...
-#35 9.289   [ok]    zsh-5.9.tar.xz
-#35 9.289 >>> All sources downloaded successfully.
-#35 DONE 9.3s
+#35 [temp-tools-builder 13/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/zsh.recipe
+#35 0.285 >>> Fetching sources for zsh 5.9
+#35 0.294   [fetch] zsh-5.9.tar.xz from sourceforge.net ...
+#35 12.64   [ok]    zsh-5.9.tar.xz
+#35 12.64 >>> All sources downloaded successfully.
+#35 DONE 12.8s
 
-#36 [temp-tools-builder 14/60] RUN fetch_sources /recipes/stage2/make.recipe
-#36 0.133 >>> Fetching sources for make 4.4.1
-#36 0.136   [fetch] make-4.4.1.tar.gz from ftp.gnu.org ...
-#36 5.143   [skip]  ftp.gnu.org unreachable
-#36 5.146   [fetch] make-4.4.1.tar.gz from mirror.csclub.uwaterloo.ca ...
-#36 8.176   [ok]    make-4.4.1.tar.gz
-#36 8.176 >>> All sources downloaded successfully.
-#36 DONE 8.2s
+#36 [temp-tools-builder 14/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/make.recipe
+#36 0.146 >>> Fetching sources for make 4.4.1
+#36 0.146   [cache] make-4.4.1.tar.gz
+#36 0.146 >>> All sources downloaded successfully.
+#36 DONE 0.2s
 
-#37 [temp-tools-builder 15/60] RUN fetch_sources /recipes/stage2/sed.recipe
-#37 0.189 >>> Fetching sources for sed 4.9
-#37 0.196   [fetch] sed-4.9.tar.xz from ftp.gnu.org ...
-#37 5.208   [skip]  ftp.gnu.org unreachable
-#37 5.212   [fetch] sed-4.9.tar.xz from mirror.csclub.uwaterloo.ca ...
-#37 8.008   [ok]    sed-4.9.tar.xz
-#37 8.008 >>> All sources downloaded successfully.
-#37 DONE 8.0s
+#37 [temp-tools-builder 15/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/sed.recipe
+#37 0.147 >>> Fetching sources for sed 4.9
+#37 0.147   [cache] sed-4.9.tar.xz
+#37 0.147 >>> All sources downloaded successfully.
+#37 DONE 0.2s
 
-#38 [temp-tools-builder 16/60] RUN fetch_sources /recipes/stage2/gawk.recipe
-#38 0.205 >>> Fetching sources for gawk 5.3.2
-#38 0.213   [fetch] gawk-5.3.2.tar.xz from ftp.gnu.org ...
-#38 5.224   [skip]  ftp.gnu.org unreachable
-#38 5.227   [fetch] gawk-5.3.2.tar.xz from mirror.csclub.uwaterloo.ca ...
-#38 8.530   [ok]    gawk-5.3.2.tar.xz
-#38 8.530 >>> All sources downloaded successfully.
-#38 DONE 8.6s
+#38 [temp-tools-builder 16/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/gawk.recipe
+#38 0.147 >>> Fetching sources for gawk 5.3.2
+#38 0.147   [cache] gawk-5.3.2.tar.xz
+#38 0.147 >>> All sources downloaded successfully.
+#38 DONE 0.2s
 
-#39 [temp-tools-builder 17/60] RUN fetch_sources /recipes/stage2/bison.recipe
-#39 0.203 >>> Fetching sources for bison 3.8.2
-#39 0.211   [fetch] bison-3.8.2.tar.xz from ftp.gnu.org ...
-#39 5.222   [skip]  ftp.gnu.org unreachable
-#39 5.226   [fetch] bison-3.8.2.tar.xz from mirror.csclub.uwaterloo.ca ...
-#39 8.076   [ok]    bison-3.8.2.tar.xz
-#39 8.076 >>> All sources downloaded successfully.
-#39 DONE 8.1s
+#39 [temp-tools-builder 17/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/bison.recipe
+#39 0.138 >>> Fetching sources for bison 3.8.2
+#39 0.139   [cache] bison-3.8.2.tar.xz
+#39 0.139 >>> All sources downloaded successfully.
+#39 DONE 0.1s
 
-#40 [temp-tools-builder 18/60] RUN fetch_sources /recipes/stage2/diffutils.recipe
-#40 0.186 >>> Fetching sources for diffutils 3.12
-#40 0.194   [fetch] diffutils-3.12.tar.xz from ftp.gnu.org ...
-#40 5.206   [skip]  ftp.gnu.org unreachable
-#40 5.210   [fetch] diffutils-3.12.tar.xz from mirror.csclub.uwaterloo.ca ...
-#40 7.987   [ok]    diffutils-3.12.tar.xz
-#40 7.987 >>> All sources downloaded successfully.
-#40 DONE 8.0s
+#40 [temp-tools-builder 18/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/diffutils.recipe
+#40 0.127 >>> Fetching sources for diffutils 3.12
+#40 0.128   [cache] diffutils-3.12.tar.xz
+#40 0.128 >>> All sources downloaded successfully.
+#40 DONE 0.1s
 
-#41 [temp-tools-builder 19/60] RUN fetch_sources /recipes/stage2/findutils.recipe
-#41 0.186 >>> Fetching sources for findutils 4.10.0
-#41 0.194   [fetch] findutils-4.10.0.tar.xz from ftp.gnu.org ...
-#41 5.205   [skip]  ftp.gnu.org unreachable
-#41 5.209   [fetch] findutils-4.10.0.tar.xz from mirror.csclub.uwaterloo.ca ...
-#41 8.102   [ok]    findutils-4.10.0.tar.xz
-#41 8.102 >>> All sources downloaded successfully.
-#41 DONE 8.1s
+#41 [temp-tools-builder 19/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/findutils.recipe
+#41 0.130 >>> Fetching sources for findutils 4.10.0
+#41 0.131   [cache] findutils-4.10.0.tar.xz
+#41 0.131 >>> All sources downloaded successfully.
+#41 DONE 0.1s
 
-#42 [temp-tools-builder 20/60] RUN fetch_sources /recipes/stage2/patch.recipe
-#42 0.198 >>> Fetching sources for patch 2.8
-#42 0.206   [fetch] patch-2.8.tar.xz from ftp.gnu.org ...
-#42 5.218   [skip]  ftp.gnu.org unreachable
-#42 5.221   [fetch] patch-2.8.tar.xz from mirror.csclub.uwaterloo.ca ...
-#42 8.249   [ok]    patch-2.8.tar.xz
-#42 8.249 >>> All sources downloaded successfully.
-#42 DONE 8.3s
+#42 [temp-tools-builder 20/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/patch.recipe
+#42 0.134 >>> Fetching sources for patch 2.8
+#42 0.135   [cache] patch-2.8.tar.xz
+#42 0.135 >>> All sources downloaded successfully.
+#42 DONE 0.1s
 
-#43 [temp-tools-builder 21/60] RUN fetch_sources /recipes/stage2/tar.recipe
-#43 0.116 >>> Fetching sources for tar 1.35
-#43 0.119   [fetch] tar-1.35.tar.xz from ftp.gnu.org ...
-#43 5.127   [skip]  ftp.gnu.org unreachable
-#43 5.130   [fetch] tar-1.35.tar.xz from mirror.csclub.uwaterloo.ca ...
-#43 8.149   [ok]    tar-1.35.tar.xz
-#43 8.149 >>> All sources downloaded successfully.
-#43 DONE 8.2s
+#43 [temp-tools-builder 21/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/tar.recipe
+#43 0.132 >>> Fetching sources for tar 1.35
+#43 0.133   [cache] tar-1.35.tar.xz
+#43 0.133 >>> All sources downloaded successfully.
+#43 DONE 0.1s
 
-#44 [temp-tools-builder 22/60] RUN fetch_sources /recipes/stage2/gzip.recipe
-#44 0.186 >>> Fetching sources for gzip 1.14
-#44 0.195   [fetch] gzip-1.14.tar.xz from ftp.gnu.org ...
-#44 5.207   [skip]  ftp.gnu.org unreachable
-#44 5.210   [fetch] gzip-1.14.tar.xz from mirror.csclub.uwaterloo.ca ...
+#44 [temp-tools-builder 22/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/gzip.recipe
+#44 0.138 >>> Fetching sources for gzip 1.14
+#44 0.139   [cache] gzip-1.14.tar.xz
+#44 0.139 >>> All sources downloaded successfully.
+#44 DONE 0.2s
+
+#45 [temp-tools-builder 23/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/grep.recipe
+#45 0.139 >>> Fetching sources for grep 3.12
+#45 0.139   [cache] grep-3.12.tar.xz
+#45 0.139 >>> All sources downloaded successfully.
+#45 DONE 0.2s
+
+#46 [temp-tools-builder 24/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/gettext.recipe
+#46 0.141 >>> Fetching sources for gettext 0.22.5
+#46 0.141   [cache] gettext-0.22.5.tar.xz
+#46 0.141 >>> All sources downloaded successfully.
+#46 DONE 0.2s
+
+#47 [temp-tools-builder 25/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/zstd.recipe
+#47 0.138 >>> Fetching sources for zstd 1.5.7
+#47 0.139   [cache] zstd-1.5.7.tar.gz
+#47 0.139 >>> All sources downloaded successfully.
+#47 DONE 0.2s
+
+#48 [temp-tools-builder 26/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/libtool.recipe
+#48 0.147 >>> Fetching sources for libtool 2.5.4
+#48 0.148   [cache] libtool-2.5.4.tar.xz
+#48 0.148 >>> All sources downloaded successfully.
+#48 DONE 0.2s
+
+#49 [temp-tools-builder 27/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/kmod.recipe
+#49 0.141 >>> Fetching sources for kmod 33
+#49 0.141   [cache] kmod-33.tar.xz
+#49 0.141 >>> All sources downloaded successfully.
+#49 DONE 0.2s
+
+#50 [temp-tools-builder 28/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/shadow.recipe
+#50 0.152 >>> Fetching sources for shadow 4.16.0
+#50 0.153   [cache] shadow-4.16.0.tar.xz
+#50 0.153 >>> All sources downloaded successfully.
+#50 DONE 0.2s
+
+#51 [temp-tools-builder 29/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/python.recipe
+#51 0.135 >>> Fetching sources for Python 3.13.3
+#51 0.136   [cache] Python-3.13.3.tar.xz
+#51 0.136 >>> All sources downloaded successfully.
+#51 DONE 0.2s
+
+#52 [temp-tools-builder 30/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/ninja.recipe
+#52 0.148 >>> Fetching sources for ninja 1.12.1
+#52 0.148   [cache] v1.12.1.tar.gz
+#52 0.148 >>> All sources downloaded successfully.
+#52 DONE 0.2s
+
+#53 [temp-tools-builder 31/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/meson.recipe
+#53 0.140 >>> Fetching sources for meson 1.7.0
+#53 0.140   [cache] meson-1.7.0.tar.gz
+#53 0.140 >>> All sources downloaded successfully.
+#53 DONE 0.2s
+
+#54 [temp-tools-builder 32/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/cmake.recipe
+#54 0.156 >>> Fetching sources for cmake 3.31.6
+#54 0.156   [cache] cmake-3.31.6.tar.gz
+#54 0.156 >>> All sources downloaded successfully.
+#54 DONE 0.2s
+
+#55 [temp-tools-builder 33/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/binutils-pass2.recipe
+#55 0.154 >>> Fetching sources for binutils 2.44
+#55 0.154 >>> All sources downloaded successfully.
+#55 DONE 0.2s
+
+#56 [temp-tools-builder 34/60] RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/llvm.recipe
+#56 0.132 >>> Fetching sources for llvm-project 19.1.7
+#56 0.133   [cache] llvm-project-19.1.7.src.tar.xz
+#56 0.133 >>> All sources downloaded successfully.
+#56 DONE 0.1s
+
+#57 [temp-tools-builder 35/60] RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/m4.recipe
+#57 0.144 >>> Engine: Starting build for m4 1.4.21 (stage 2)
+#57 0.230 >>> Engine: Building in /sources/m4-1.4.21
+#57 0.269 checking for a BSD-compatible install... /usr/bin/install -c
+#57 0.273 checking whether sleep supports fractional seconds... yes
+#57 0.274 checking filesystem timestamp resolution... 0.01
+#57 0.340 checking whether build environment is sane... yes
+#57 0.345 checking for a race-free mkdir -p... /usr/bin/mkdir -p
+#57 0.346 checking for gawk... gawk
+#57 0.346 checking whether make sets $(MAKE)... yes
+#57 0.354 checking whether make supports nested variables... yes
+#57 0.361 checking xargs -n works... yes
+#57 0.367 checking whether UID '0' is supported by ustar format... yes
+#57 0.367 checking whether GID '0' is supported by ustar format... yes
+#57 0.367 checking how to create a ustar tar archive... gnutar
+#57 0.374 checking for gcc... /usr/local/bin/fleur-cc
+#57 0.472 checking whether the C compiler works... yes
+#57 0.528 checking for C compiler default output file name... a.out
+#57 0.528 checking for suffix of executables... 
+#57 0.582 checking whether we are cross compiling... no
+#57 0.635 checking for suffix of object files... o
+#57 0.658 checking whether the compiler supports GNU C... yes
+#57 0.677 checking whether /usr/local/bin/fleur-cc accepts -g... yes
+#57 0.696 checking for /usr/local/bin/fleur-cc option to enable C23 features... -std=gnu23
+#57 0.752 checking whether /usr/local/bin/fleur-cc -std=gnu23 understands -c and -o together... yes
+#57 0.791 checking whether the compiler is clang... yes
+#57 0.812 checking for compiler option needed when checking for declarations... -Werror=implicit-function-declaration
+#57 0.834 checking whether make supports the include directive... yes (GNU style)
+#57 0.839 checking dependency style of /usr/local/bin/fleur-cc -std=gnu23... gcc3
+#57 0.866 checking for stdio.h... yes
+#57 0.890 checking for stdlib.h... yes
+#57 0.920 checking for string.h... yes
+#57 0.951 checking for inttypes.h... yes
+#57 0.980 checking for stdint.h... yes
+#57 1.012 checking for strings.h... yes
+#57 1.042 checking for sys/stat.h... yes
+#57 1.074 checking for sys/types.h... yes
+#57 1.104 checking for unistd.h... yes
+#57 1.136 checking for wchar.h... yes
+#57 1.169 checking for minix/config.h... no
+#57 1.202 checking for stdbool.h... yes
+#57 1.234 checking for uchar.h... yes
+#57 1.268 checking for sys/param.h... yes
+#57 1.300 checking for sys/socket.h... yes
+#57 1.332 checking for dirent.h... yes
+#57 1.364 checking for error.h... yes
+#57 1.397 checking for stdio_ext.h... yes
+#57 1.429 checking for threads.h... yes
+#57 1.463 checking for xlocale.h... no
+#57 1.495 checking for langinfo.h... yes
+#57 1.529 checking for getopt.h... yes
+#57 1.561 checking for sys/process.h... no
+#57 1.594 checking for iconv.h... yes
+#57 1.626 checking for limits.h... yes
+#57 1.673 checking for crtdefs.h... no
+#57 1.709 checking for wctype.h... yes
+#57 1.745 checking for math.h... yes
+#57 1.790 checking for sys/mman.h... yes
+#57 1.825 checking for obstack.h... yes
+#57 1.858 checking for pthread.h... yes
+#57 1.894 checking for malloc.h... yes
+#57 1.927 checking for spawn.h... yes
+#57 1.964 checking for libcx/spawn2.h... no
+#57 2.009 checking for sys/time.h... yes
+#57 2.045 checking for stdckdint.h... yes
+#57 2.076 checking for sys/random.h... yes
+#57 2.113 checking for sys/wait.h... yes
+#57 2.146 checking for features.h... yes
+#57 2.178 checking for arpa/inet.h... yes
+#57 2.212 checking for semaphore.h... yes
+#57 2.243 checking for netdb.h... yes
+#57 2.276 checking for netinet/in.h... yes
+#57 2.308 checking for sys/select.h... yes
+#57 2.340 checking for sys/ioctl.h... yes
+#57 2.370 checking for sys/un.h... yes
+#57 2.400 checking for sys/uio.h... yes
+#57 2.430 checking whether it is safe to define __EXTENSIONS__... yes
+#57 2.463 checking whether _XOPEN_SOURCE should be defined... no
+#57 2.490 checking build system type... x86_64-pc-linux-gnu
+#57 2.531 checking host system type... x86_64-pc-linux-gnu
+#57 2.531 checking how to run the C preprocessor... /usr/local/bin/fleur-cc -std=gnu23 -E
+#57 2.602 checking for egrep -e... /usr/bin/grep -E
+#57 2.603 checking for Minix Amsterdam compiler... no
+#57 2.619 checking for ar... ar
+#57 2.619 checking for ranlib... ranlib
+#57 2.619 checking whether to use C++... no
+#57 2.620 checking for /usr/local/bin/fleur-cc -std=gnu23 option to support large files... none needed
+#57 2.665 configure: autobuild project... GNU M4
+#57 2.665 configure: autobuild revision... 1.4.21
+#57 2.665 ./configure: line 9686: hostname: command not found
+#57 2.666 configure: autobuild timestamp... 20260311T141252Z
+#57 2.667 checking for timestamps of last git commit... touch skipped
+#57 2.667 checking for unsigned long long int... yes
+#57 2.712 checking for long long int... yes
+#57 2.760 checking for unsigned long long int... (cached) yes
+#57 2.761 checking for lstat... yes
+#57 2.808 checking for btowc... yes
+#57 2.857 checking for mbrtowc... yes
+#57 2.902 checking for mbsinit... yes
+#57 2.956 checking for canonicalize_file_name... yes
+#57 3.017 checking for realpath... yes
+#57 3.080 checking for _set_invalid_parameter_handler... no
+#57 3.171 checking for fchdir... yes
+#57 3.255 checking for fcntl... yes
+#57 3.319 checking for symlink... yes
+#57 3.387 checking for fdopendir... yes
+#57 3.459 checking for fpurge... no
+#57 3.526 checking for fstatat... yes
+#57 3.598 checking for getdtablesize... yes
+#57 3.669 checking for getlocalename_l... no
+#57 3.741 checking for getexecname... no
+#57 3.813 checking for iswcntrl... yes
+#57 3.877 checking for mbslen... no
+#57 3.943 checking for mprotect... yes
+#57 4.003 checking for mkstemp... yes
+#57 4.067 checking for openat... yes
+#57 4.134 checking for pipe... yes
+#57 4.209 checking for posix_spawn_file_actions_addchdir... no
+#57 4.310 checking for readlink... yes
+#57 4.387 checking for isblank... yes
+#57 4.443 checking for iswctype... yes
+#57 4.493 checking for link... yes
+#57 4.554 checking for secure_getenv... yes
+#57 4.624 checking for getuid... yes
+#57 4.698 checking for geteuid... yes
+#57 4.766 checking for getgid... yes
+#57 4.844 checking for getegid... yes
+#57 4.907 checking for sigaction... yes
+#57 4.963 checking for sigaltstack... yes
+#57 5.009 checking for siginterrupt... yes
+#57 5.053 checking for setrlimit... yes
+#57 5.096 checking for getrlimit... yes
+#57 5.143 checking for snprintf... yes
+#57 5.190 checking for __xpg_strerror_r... yes
+#57 5.235 checking for vasnprintf... no
+#57 5.282 checking for wcrtomb... yes
+#57 5.326 checking for wcwidth... yes
+#57 5.369 checking for gettimeofday... yes
+#57 5.414 checking for memset_s... no
+#57 5.462 checking for pselect... yes
+#57 5.506 checking for pthread_sigmask... yes
+#57 5.551 checking for setenv... yes
+#57 5.594 checking for sleep... yes
+#57 5.638 checking for shutdown... yes
+#57 5.684 checking for mquery... no
+#57 5.730 checking for pstat_getprocvm... no
+#57 5.776 checking for wctob... yes
+#57 5.824 checking for size_t... yes
+#57 5.890 checking for working alloca.h... yes
+#57 5.934 checking for alloca... yes
+#57 5.935 checking whether the preprocessor supports include_next... yes
+#57 5.961 checking whether source code line length is unlimited... yes
+#57 5.977 checking for inline... inline
+#57 5.996 checking for wint_t... yes
+#57 6.022 checking whether wint_t is large enough... yes
+#57 6.047 checking whether <wchar.h> uses 'inline' correctly... yes
+#57 6.137 checking for nl_langinfo and CODESET... yes
+#57 6.197 checking for a traditional french locale... none
+#57 6.259 checking for ld used by /usr/local/bin/fleur-cc -std=gnu23... /usr/bin/ld
+#57 6.276 checking if the linker (/usr/bin/ld) is GNU ld... yes
+#57 6.278 checking for shared library run path origin... done
+#57 6.291 checking 32-bit host C ABI... no
+#57 6.310 checking for ELF binary format... yes
+#57 6.327 checking for the common suffixes of directories in the library search path... lib,lib,lib64
+#57 6.345 checking whether char8_t is correctly defined... yes
+#57 6.368 checking whether char16_t is correctly defined... yes
+#57 6.391 checking whether char32_t is correctly defined... yes
+#57 6.414 checking for bit size of wchar_t... 32
+#57 6.476 checking for mbstate_t... yes
+#57 6.515 checking for a traditional japanese locale... none
+#57 6.577 checking for an english Unicode locale... none
+#57 6.636 checking for a transitional chinese locale... none
+#57 6.696 checking whether mbrtowc handles incomplete characters... guessing yes
+#57 6.696 checking whether mbrtowc works as well as mbtowc... guessing yes
+#57 6.696 checking for /usr/local/bin/fleur-cc -std=gnu23 options to detect undeclared functions... none needed
+#57 6.743 checking for /usr/local/bin/fleur-cc -std=gnu23 options to ignore future-version functions... none needed
+#57 6.765 checking whether mbrtoc32 is declared... yes
+#57 6.788 checking for mbrtoc32... yes
+#57 6.839 checking whether mbrtoc32 works as well as mbrtowc... guessing yes
+#57 6.840 checking whether c32rtomb is declared... yes
+#57 6.864 checking for c32rtomb... yes
+#57 6.913 checking whether c32rtomb works as well as wcrtomb... guessing yes
+#57 6.913 checking whether malloc is ptrdiff_t safe... yes
+#57 6.935 checking whether malloc, calloc set errno on failure... yes
+#57 6.935 checking whether lstat correctly handles trailing slash... yes
+#57 6.993 checking whether // is distinct from /... no
+#57 6.995 checking whether realpath works... yes
+#57 7.054 checking for faccessat... yes
+#57 7.098 checking for getcwd... yes
+#57 7.143 checking if environ is properly declared... yes
+#57 7.170 checking for complete errno.h... yes
+#57 7.187 checking for error... yes
+#57 7.239 checking whether error_at_line is declared... yes
+#57 7.267 checking for error_at_line... yes
+#57 7.311 checking for working error function... yes
+#57 7.357 checking whether strerror_r is declared... yes
+#57 7.394 checking whether strerror_r returns char *... yes
+#57 7.419 checking for mode_t... yes
+#57 7.485 checking whether ctype.h defines __header_inline... no
+#57 7.509 checking for sig_atomic_t... yes
+#57 7.563 checking whether fchdir is declared... yes
+#57 7.600 checking whether fflush works on input streams... no
+#57 7.659 checking for working fcntl.h... yes
+#57 8.715 checking for pid_t... yes
+#57 8.794 checking for mempcpy... yes
+#57 8.845 checking for eaccess... yes
+#57 8.895 checking whether byte ordering is bigendian... no
+#57 8.970 checking whether fopen recognizes a trailing slash... yes
+#57 9.022 checking whether frexp() can be used without linking with libm... yes
+#57 9.093 checking whether alarm is declared... yes
+#57 9.131 checking whether long double and double are the same... no
+#57 9.155 checking whether stdin defaults to large file offsets... yes
+#57 9.202 checking for off64_t... yes
+#57 9.225 checking for blksize_t... yes
+#57 9.293 checking for blkcnt_t... yes
+#57 9.359 checking whether fseeko is declared... yes
+#57 9.395 checking for fseeko... yes
+#57 9.443 checking whether fflush works on input streams... (cached) no
+#57 9.443 checking whether stat file-mode macros are broken... no
+#57 9.465 checking for C/C++ restrict keyword... __restrict__
+#57 9.490 checking for nlink_t... yes
+#57 9.537 checking whether ftello is declared... yes
+#57 9.572 checking whether ungetc works on arbitrary bytes... yes
+#57 9.622 checking for ftello... yes
+#57 9.670 checking whether ftello works... yes
+#57 9.733 checking whether getcwd (NULL, 0) allocates memory for result... yes
+#57 9.791 checking for getcwd with POSIX signature... yes
+#57 9.817 checking whether getcwd is declared... yes
+#57 9.858 checking whether getdtablesize is declared... yes
+#57 9.896 checking for pthread.h... (cached) yes
+#57 9.963 checking for pthread_kill in -lpthread... yes
+#57 10.01 checking whether POSIX threads API is available... yes
+#57 10.05 checking whether setlocale (LC_ALL, NULL) is multithread-safe... yes
+#57 10.05 checking whether setlocale (category, NULL) is multithread-safe... yes
+#57 10.05 checking whether locale.h defines locale_t... yes
+#57 10.08 checking for uselocale... yes
+#57 10.13 checking whether uselocale works... yes
+#57 10.17 checking for fake locale system (OpenBSD, Android)... no
+#57 10.22 checking for Solaris 11.4 locale system... no
+#57 10.22 checking for getopt.h... (cached) yes
+#57 10.22 checking for getopt_long_only... yes
+#57 10.27 checking whether getopt is POSIX compatible... yes
+#57 10.45 checking for working GNU getopt function... yes
+#57 10.52 checking for working GNU getopt_long function... yes
+#57 10.57 checking for glibc-compatible sys/cdefs.h... yes
+#57 10.61 checking host CPU and C ABI... x86_64
+#57 10.65 checking for iconv... yes
+#57 10.70 checking for working iconv... yes
+#57 10.75 checking whether iconv is compatible with its POSIX signature... yes
+#57 10.78 checking whether limits.h has WORD_BIT, BOOL_WIDTH etc.... yes
+#57 10.80 checking whether limits.h has SSIZE_MAX... yes
+#57 10.83 checking whether the compiler produces multi-arch binaries... no
+#57 10.85 checking whether stdint.h conforms to C99... yes
+#57 10.95 checking whether stdint.h works without ISO C predefines... yes
+#57 10.98 checking whether stdint.h has UINTMAX_WIDTH etc.... yes
+#57 11.05 checking whether INT32_MAX < INTMAX_MAX... yes
+#57 11.08 checking whether INT64_MAX == LONG_MAX... yes
+#57 11.11 checking whether UINT32_MAX < UINTMAX_MAX... yes
+#57 11.13 checking whether UINT64_MAX == ULONG_MAX... yes
+#57 11.16 checking where to find the exponent in a 'double'... word 1 bit 20
+#57 11.22 checking where to find the exponent in a 'float'... word 0 bit 23
+#57 11.27 checking where to find the exponent in a 'long double'... word 2 bit 0
+#57 11.34 checking whether iswcntrl works... yes
+#57 11.39 checking for towlower... yes
+#57 11.44 checking for wctype_t... yes
+#57 11.47 checking for wctrans_t... yes
+#57 11.49 checking whether wctype supports the "blank" and "punct" character classes... yes
+#57 11.54 checking whether langinfo.h defines CODESET... yes
+#57 11.57 checking whether langinfo.h defines ALTMON_1... yes
+#57 11.59 checking whether langinfo.h defines ABALTMON_1... no
+#57 11.62 checking whether langinfo.h defines ERA... yes
+#57 11.65 checking for good max_align_t... yes
+#57 11.68 checking whether NULL can be used in arbitrary expressions... yes
+#57 11.70 checking for unreachable in C... yes
+#57 11.76 checking whether nullptr_t needs <stddef.h>... yes
+#57 11.78 checking whether <stddef.h> is idempotent... guessing yes
+#57 11.80 checking whether locale.h defines _locale_t... no
+#57 11.83 checking whether locale.h conforms to POSIX:2001... yes
+#57 11.86 checking whether struct lconv is properly defined... yes
+#57 11.88 checking for CFPreferencesCopyAppValue... no
+#57 11.92 checking for CFLocaleCopyPreferredLanguages... no
+#57 11.95 checking for LC_MESSAGES... yes
+#57 12.00 checking for multithread API to use... none
+#57 12.00 checking for a sed that does not truncate output... /usr/bin/sed
+#57 12.00 checking for grep that handles long lines and -e... /usr/bin/grep
+#57 12.01 checking whether malloc (0) returns nonnull... yes
+#57 12.06 checking whether NAN macro works... yes
+#57 12.11 checking whether HUGE_VAL works... yes
+#57 12.18 checking for MAP_ANONYMOUS... yes
+#57 12.21 checking whether memchr works... yes
+#57 12.30 checking whether memrchr is declared... yes
+#57 12.36 checking whether <limits.h> defines MIN and MAX... no
+#57 12.41 checking whether <sys/param.h> defines MIN and MAX... yes
+#57 12.45 checking for obstacks that work with any size object... no
+#57 12.50 checking for O_CLOEXEC... yes
+#57 12.53 checking for promoted mode_t type... mode_t
+#57 12.57 checking for library containing posix_spawn... none required
+#57 12.63 checking for posix_spawn... yes
+#57 12.70 checking whether posix_spawn is declared... yes
+#57 12.74 checking for posix_spawn_file_actions_addchdir_np... yes
+#57 12.81 checking whether posix_spawn works... yes
+#57 13.01 checking whether posix_spawn rejects scripts without shebang... yes
+#57 13.07 checking whether posix_spawnp rejects scripts without shebang... yes
+#57 13.14 checking whether posix_spawnattr_setschedpolicy is supported... yes
+#57 13.16 checking whether posix_spawnattr_setschedparam is supported... yes
+#57 13.19 checking for pthread_t... yes
+#57 13.29 checking for pthread_spinlock_t... yes
+#57 13.44 checking for pthread_spin_init... yes
+#57 13.54 checking for sigset_t... yes
+#57 13.61 checking for SIGPIPE... yes
+#57 13.64 checking whether realloc should abort upon undefined behaviour... no
+#57 13.64 checking for sched.h... yes
+#57 13.66 checking for struct sched_param... yes
+#57 13.71 checking for uid_t... yes
+#57 13.78 checking for gid_t... yes
+#57 13.85 checking for volatile sig_atomic_t... yes
+#57 13.90 checking for sighandler_t... yes
+#57 13.96 checking for egrep... /usr/bin/grep -E
+#57 13.96 checking whether C symbols are prefixed with underscore at the linker level... no
+#57 13.98 checking whether snprintf returns a byte count as in C99... yes
+#57 14.03 checking whether printf supports POSIX/XSI format strings with positions... yes
+#57 14.08 checking whether snprintf is declared... yes
+#57 14.12 checking for posix_spawnattr_t... yes
+#57 14.17 checking for posix_spawn_file_actions_t... yes
+#57 14.22 checking for __sync_bool_compare_and_swap... yes
+#57 14.27 checking whether stdckdint.h can be included in C... yes
+#57 14.29 checking checking for an ISO C23 compliant stdckdint.h in C... yes
+#57 14.31 checking whether fcloseall is declared... yes
+#57 14.35 checking whether getw is declared... yes
+#57 14.39 checking whether putw is declared... yes
+#57 14.43 checking which flavor of printf attribute matches inttypes macros... system
+#57 14.47 checking whether ecvt is declared... yes
+#57 14.52 checking whether fcvt is declared... yes
+#57 14.55 checking whether gcvt is declared... yes
+#57 14.59 checking whether MB_CUR_MAX is correct... guessing yes
+#57 14.64 checking for compiler option needed when checking for future declarations... none
+#57 14.64 checking whether strdup is declared... yes
+#57 14.67 checking whether strerror(0) succeeds... yes
+#57 14.72 checking for strerror_r... yes
+#57 14.77 checking for strerror_r with POSIX signature... no
+#57 14.79 checking whether __xpg_strerror_r works... yes
+#57 14.84 checking whether streq is declared... no
+#57 14.87 checking whether memeq is declared... no
+#57 14.91 checking whether strncpy works... yes
+#57 14.97 checking whether strnlen is declared... yes
+#57 15.02 checking whether strsignal is declared... yes
+#57 15.06 checking whether strstr works... yes
+#57 15.12 checking whether ldexp() can be used without linking with libm... yes
+#57 15.21 checking for struct timespec in <time.h>... yes
+#57 15.23 checking for TIME_UTC in <time.h>... yes
+#57 15.26 checking whether execvpe is declared... yes
+#57 15.30 checking whether clearerr_unlocked is declared... yes
+#57 15.33 checking whether feof_unlocked is declared... yes
+#57 15.37 checking whether ferror_unlocked is declared... yes
+#57 15.41 checking whether fflush_unlocked is declared... yes
+#57 15.46 checking whether fgets_unlocked is declared... yes
+#57 15.50 checking whether fileno_unlocked is declared... yes
+#57 15.54 checking whether fputc_unlocked is declared... yes
+#57 15.59 checking whether fputs_unlocked is declared... yes
+#57 15.63 checking whether fread_unlocked is declared... yes
+#57 15.66 checking whether fwrite_unlocked is declared... yes
+#57 15.70 checking whether getc_unlocked is declared... yes
+#57 15.74 checking whether getchar_unlocked is declared... yes
+#57 15.78 checking whether putc_unlocked is declared... yes
+#57 15.82 checking whether putchar_unlocked is declared... yes
+#57 15.85 checking for inttypes.h... yes
+#57 15.88 checking for stdint.h... yes
+#57 15.90 checking for intmax_t... yes
+#57 15.93 checking whether snprintf truncates the result as in C99... yes
+#57 15.98 checking for wcslen... yes
+#57 16.02 checking for snprintf... (cached) yes
+#57 16.02 checking for strnlen... yes
+#57 16.07 checking for wcrtomb... (cached) yes
+#57 16.07 checking whether _snprintf is declared... no
+#57 16.09 checking whether printf supports size specifiers as in C99... yes
+#57 16.15 checking whether printf supports size specifiers as in C23... yes
+#57 16.21 checking whether printf supports 'long double' arguments... yes
+#57 16.26 checking whether printf supports infinite 'double' arguments... yes
+#57 16.32 checking whether printf supports infinite 'long double' arguments... yes
+#57 16.40 checking whether printf supports the 'a' and 'A' directives... yes
+#57 16.46 checking whether printf supports the 'b' directive... yes
+#57 16.51 checking whether printf supports the 'F' directive... yes
+#57 16.56 checking whether printf supports the 'ls' directive... yes
+#57 16.62 checking whether printf supports the 'lc' directive correctly... yes
+#57 16.67 checking whether printf supports the grouping flag... yes
+#57 16.72 checking whether printf supports grouping on integers with a precision... guessing yes
+#57 16.78 checking whether printf supports grouping with a multibyte separator... guessing yes
+#57 16.83 checking whether printf supports the left-adjust flag correctly... yes
+#57 16.88 checking whether printf supports the zero flag correctly... yes
+#57 16.93 checking whether printf supports the alternative flag with a zero precision... yes
+#57 16.98 checking whether printf supports large precisions... yes
+#57 17.03 checking whether printf survives out-of-memory conditions... yes
+#57 17.09 checking for vasprintf... yes
+#57 17.14 checking whether wcsdup is declared... yes
+#57 17.16 checking for strerrorname_np... yes
+#57 17.21 checking whether strerrorname_np works... yes
+#57 17.26 checking for C compiler option to allow warnings... -Wno-error
+#57 17.29 checking whether <sys/socket.h> is self-contained... yes
+#57 17.32 checking for shutdown... (cached) yes
+#57 17.32 checking whether <sys/socket.h> defines the SHUT_* macros... yes
+#57 17.34 checking for struct sockaddr_storage... yes
+#57 17.39 checking for sa_family_t... yes
+#57 17.44 checking for struct sockaddr_storage.ss_family... yes
+#57 17.46 checking for library needed for semaphore functions... none
+#57 17.51 checking for a french Unicode locale... none
+#57 17.57 checking for a turkish Unicode locale... none
+#57 17.63 checking whether frexp works... yes
+#57 17.73 checking whether frexpl is declared... yes
+#57 17.81 checking whether frexpl() can be used without linking with libm... yes
+#57 17.91 checking whether frexpl works... yes
+#57 18.01 checking for struct timeval... yes
+#57 18.03 checking for wide-enough struct timeval.tv_sec member... yes
+#57 18.06 checking for IPv4 sockets... yes
+#57 18.08 checking for IPv6 sockets... yes
+#57 18.12 checking for off_t... yes
+#57 18.18 checking whether <sys/select.h> is self-contained... yes
+#57 18.28 checking whether _putenv is declared... no
+#57 18.31 checking whether initstate is declared... yes
+#57 18.35 checking whether setstate is declared... yes
+#57 18.38 checking for library containing setsockopt... none needed
+#57 18.43 checking whether setenv is declared... yes
+#57 18.46 checking for search.h... yes
+#57 18.50 checking for tsearch... yes
+#57 18.54 checking whether <sys/ioctl.h> declares ioctl... yes
+#57 18.57 checking whether unsetenv is declared... yes
+#57 18.63 checking whether access honors trailing slash... yes
+#57 18.69 checking for alignas and alignof... yes, keywords
+#57 18.71 checking for alloca as a compiler built-in... yes
+#57 18.73 checking whether to enable assertions... yes
+#57 18.73 checking for static_assert... yes, a keyword
+#57 18.75 checking for bool, true, false... yes
+#57 18.77 checking whether btowc(0) is correct... yes
+#57 18.82 checking whether btowc is consistent with mbrtowc in the C locale... no
+#57 18.89 checking for __builtin_expect... yes
+#57 18.94 checking whether calloc (0, n) and calloc (n, 0) return nonnull... yes
+#57 18.99 checking for faccessat... (cached) yes
+#57 18.99 checking whether this system supports file names of any length... no
+#57 19.01 checking for library containing clock_gettime... none required
+#57 19.05 checking for clock_getres... yes
+#57 19.09 checking for clock_gettime... yes
+#57 19.14 checking for clock_settime... yes
+#57 19.18 checking for closedir... yes
+#57 19.29 checking for d_ino member in directory struct... yes
+#57 19.34 checking for dirfd... yes
+#57 19.39 checking whether dirfd is declared... yes
+#57 19.42 checking whether dirfd is a macro... no
+#57 19.44 checking whether // is distinct from /... (cached) no
+#57 19.44 checking whether dup works... yes
+#57 19.50 checking whether dup2 works... yes
+#57 19.55 checking whether fcntl handles F_DUPFD correctly... yes
+#57 19.61 checking whether fcntl understands F_DUPFD_CLOEXEC... needs runtime check
+#57 19.68 checking whether fdopendir is declared... yes
+#57 19.71 checking whether fdopendir works... yes
+#57 19.77 checking whether fflush works on input streams... (cached) no
+#57 19.77 checking for mempcpy... (cached) yes
+#57 19.77 checking for flexible array member... yes
+#57 19.80 checking whether float.h conforms to ISO C23... no
+#57 19.82 checking whether conversion from 'int' to 'long double' works... yes
+#57 19.87 checking whether fopen supports the mode character 'x'... yes
+#57 19.92 checking whether fopen supports the mode character 'e'... yes
+#57 19.97 checking for __fpending... yes
+#57 20.02 checking whether __fpending is declared... yes
+#57 20.04 checking for __fpurge... yes
+#57 20.09 checking whether fpurge is declared... no
+#57 20.12 checking for __freadahead... no
+#57 20.16 checking for __freading... yes
+#57 20.21 checking whether free is known to preserve errno... yes
+#57 20.23 checking whether frexp works... (cached) yes
+#57 20.23 checking whether frexpl is declared... (cached) yes
+#57 20.23 checking whether frexpl() can be used without linking with libm... (cached) yes
+#57 20.23 checking whether frexpl works... (cached) yes
+#57 20.23 checking for fseeko... (cached) yes
+#57 20.24 checking whether fflush works on input streams... (cached) no
+#57 20.24 checking for _fseeki64... no
+#57 20.28 checking for __fseterr... no
+#57 20.35 checking whether fstatat (..., 0) works... yes
+#57 20.40 checking for ftello... (cached) yes
+#57 20.40 checking whether ftello works... (cached) yes
+#57 20.40 checking whether getcwd handles long file names properly... yes
+#57 20.50 checking whether getcwd succeeds when 4k < cwd_length < 16k... yes
+#57 20.56 checking whether getdtablesize works... yes
+#57 20.61 checking for newlocale... yes
+#57 20.65 checking for duplocale... yes
+#57 20.70 checking for freelocale... yes
+#57 20.75 checking for newlocale... (cached) yes
+#57 20.75 checking for duplocale... (cached) yes
+#57 20.75 checking for freelocale... (cached) yes
+#57 20.75 checking for getpagesize... yes
+#57 20.81 checking whether getpagesize is declared... yes
+#57 20.85 checking for getprogname... no
+#57 20.90 checking whether program_invocation_name is declared... yes
+#57 20.93 checking whether program_invocation_name is declared... (cached) yes
+#57 20.93 checking whether program_invocation_short_name is declared... yes
+#57 20.95 checking whether __argv is declared... no
+#57 20.98 checking for getrandom... yes
+#57 21.02 checking whether getrandom is compatible with its GNU+BSD signature... yes
+#57 21.07 checking whether the compiler generally respects inline... yes
+#57 21.09 checking whether isinf is declared... yes
+#57 21.21 checking whether isinf(long double) works... yes
+#57 21.28 checking whether isnan(double) can be used without linking with libm... yes
+#57 21.35 checking whether isnan(float) can be used without linking with libm... yes
+#57 21.41 checking whether isnan(float) works... yes
+#57 21.48 checking whether isnan(long double) can be used without linking with libm... yes
+#57 21.56 checking whether isnanl works... yes
+#57 21.64 checking for iswblank... yes
+#57 21.68 checking whether iswblank is declared... yes
+#57 21.71 checking whether iswdigit is ISO C compliant... guessing yes
+#57 21.71 checking whether iswpunct is consistent with ispunct... yes
+#57 21.76 checking whether iswxdigit is ISO C compliant... guessing yes
+#57 21.76 checking whether the compiler supports the __inline keyword... yes
+#57 21.78 checking whether localeconv works... yes
+#57 21.83 checking whether lseek detects pipes... yes
+#57 21.89 checking whether SEEK_DATA works but is incompatible with GNU... no
+#57 21.91 checking whether mbrtoc32 works on empty input... yes
+#57 21.95 checking whether the C locale is free of encoding errors... no
+#57 22.00 checking whether mbrtoc32 works in an UTF-8 locale... yes
+#57 22.05 checking whether mbrtowc handles a NULL pwc argument... guessing yes
+#57 22.05 checking whether mbrtowc has a correct return value... guessing yes
+#57 22.05 checking whether mbrtowc returns 0 when parsing a NUL character... guessing yes
+#57 22.05 checking whether mbrtowc stores incomplete characters... guessing no
+#57 22.05 checking whether mbrtowc works on empty input... yes
+#57 22.10 checking whether the C locale is free of encoding errors... no
+#57 22.15 checking for mbtowc... yes
+#57 22.20 checking for mempcpy... (cached) yes
+#57 22.20 checking for memrchr... yes
+#57 22.24 checking whether mkdir handles trailing slash... yes
+#57 22.31 checking whether mkdir handles trailing dot... yes
+#57 22.37 checking for mkdtemp... yes
+#57 22.42 checking for working mkstemp... yes
+#57 22.48 checking for nl_langinfo... yes
+#57 22.53 checking whether open recognizes a trailing slash... yes
+#57 22.58 checking for opendir... yes
+#57 22.62 checking for pipe2... yes
+#57 22.67 checking for posix_spawn_file_actions_addchdir_np... (cached) yes
+#57 22.67 checking whether posix_spawn_file_actions_addclose works... yes
+#57 22.72 checking whether posix_spawn_file_actions_adddup2 works... yes
+#57 22.77 checking whether posix_spawn_file_actions_addopen works... yes
+#57 22.84 checking whether frexp works... (cached) yes
+#57 22.84 checking whether ldexp can be used without linking with libm... (cached) yes
+#57 22.84 checking whether frexpl() can be used without linking with libm... (cached) yes
+#57 22.84 checking whether frexpl works... (cached) yes
+#57 22.84 checking whether frexpl is declared... (cached) yes
+#57 22.84 checking whether ldexpl() can be used without linking with libm... yes
+#57 22.91 checking whether ldexpl works... yes
+#57 22.99 checking whether ldexpl is declared... yes
+#57 23.04 checking whether program_invocation_name is declared... (cached) yes
+#57 23.04 checking whether program_invocation_short_name is declared... (cached) yes
+#57 23.04 checking for PTHREAD_CREATE_DETACHED... yes
+#57 23.07 checking for PTHREAD_MUTEX_RECURSIVE... yes
+#57 23.09 checking for PTHREAD_MUTEX_ROBUST... yes
+#57 23.12 checking for PTHREAD_PROCESS_SHARED... yes
+#57 23.15 checking whether pthread_once works... yes
+#57 23.15 checking for raise... yes
+#57 23.19 checking for sigprocmask... yes
+#57 23.24 checking for rawmemchr... yes
+#57 23.28 checking for readdir... yes
+#57 23.33 checking whether readlink signature is correct... yes
+#57 23.35 checking whether readlink handles trailing slash correctly... yes
+#57 23.41 checking whether readlink truncates results correctly... yes
+#57 23.46 checking whether realloc sets errno on failure... yes
+#57 23.46 checking whether realloc (..., 0) returns nonnull... no
+#57 23.51 checking for reallocarray... yes
+#57 23.56 checking for working re_compile_pattern... yes
+#57 23.63 checking whether rename honors trailing slash on destination... yes
+#57 23.69 checking whether rename honors trailing slash on source... yes
+#57 23.75 checking whether rename manages hard links correctly... yes
+#57 23.81 checking whether rename manages existing destinations correctly... yes
+#57 23.87 checking for rewinddir... yes
+#57 23.94 checking whether rmdir works... yes
+#57 24.05 checking for struct sigaction.sa_sigaction... yes
+#57 24.11 checking for signbit macro... yes
+#57 24.27 checking for signbit compiler built-ins... yes
+#57 24.37 checking for sigprocmask... (cached) yes
+#57 24.37 checking for stack direction... grows down
+#57 24.37 checking for stack_t... yes
+#57 24.48 checking for working sigaltstack... yes
+#57 24.61 checking for stdint.h... (cached) yes
+#57 24.61 checking for SIZE_MAX... yes
+#57 24.65 checking for snprintf... (cached) yes
+#57 24.65 checking whether snprintf respects a size of 1... yes
+#57 24.75 checking for ssize_t... yes
+#57 24.80 checking whether stat handles trailing slashes on files... yes
+#57 24.90 checking for struct stat.st_atim.tv_nsec... yes
+#57 24.95 checking whether struct stat.st_atim is of type struct timespec... yes
+#57 25.00 checking for struct stat.st_birthtimespec.tv_nsec... no
+#57 25.10 checking for struct stat.st_birthtimensec... no
+#57 25.20 checking for struct stat.st_birthtim.tv_nsec... no
+#57 25.31 checking for va_copy... yes
+#57 25.35 checking for vasprintf... (cached) yes
+#57 25.35 checking for stpcpy... yes
+#57 25.46 checking for strchrnul... yes
+#57 25.55 checking whether strchrnul works... yes
+#57 25.67 checking for working strerror function... yes
+#57 25.77 checking for working strnlen... yes
+#57 25.90 checking for strsignal... yes
+#57 26.00 checking whether strsignal always returns a string... yes
+#57 26.10 checking whether strstr works in linear time... yes
+#57 26.29 checking whether strstr works... (cached) yes
+#57 26.29 checking whether strtod obeys C99... yes
+#57 26.47 checking for sys/single_threaded.h... yes
+#57 26.54 checking for variable-length arrays... yes
+#57 26.63 checking for ptrdiff_t... yes
+#57 26.78 checking for vasprintf... (cached) yes
+#57 26.78 checking for waitid... yes
+#57 26.88 checking whether wcrtomb works in the C locale... yes
+#57 27.01 checking whether wcrtomb return value is correct... guessing yes
+#57 27.01 checking whether wcwidth is declared... yes
+#57 27.06 checking whether wcwidth works reasonably in UTF-8 locales... yes
+#57 27.17 checking for stdint.h... (cached) yes
+#57 27.17 checking whether c32rtomb return value is correct... yes
+#57 27.27 checking whether open recognizes a trailing slash... (cached) yes
+#57 27.27 checking for close_range... yes
+#57 27.36 checking whether fdopen sets errno... yes
+#57 27.47 checking whether freopen works on closed fds... yes
+#57 27.58 checking for ftruncate... yes
+#57 27.67 checking for gettimeofday with POSIX signature... yes
+#57 27.72 checking for duplocale... (cached) yes
+#57 27.72 checking for library containing inet_pton... none required
+#57 27.82 checking whether inet_pton is declared... yes
+#57 27.87 checking whether byte ordering is bigendian... (cached) no
+#57 27.88 checking for ioctl... yes
+#57 27.97 checking for ioctl with POSIX signature... no
+#57 28.02 checking whether link obeys POSIX... yes
+#57 28.14 checking for newlocale... (cached) yes
+#57 28.14 checking for newlocale... (cached) yes
+#57 28.14 checking for memset_explicit... no
+#57 28.18 checking for explicit_memset... no
+#57 28.23 checking for mkfifo... yes
+#57 28.27 checking whether mkfifo rejects trailing slashes... yes
+#57 28.32 checking for library containing nanosleep... none required
+#57 28.37 checking for working nanosleep... no (mishandles large arguments)
+#57 29.42 checking whether <netinet/in.h> is self-contained... yes
+#57 29.45 checking for uselocale... (cached) yes
+#57 29.45 checking whether uselocale works... (cached) yes
+#57 29.45 checking whether perror matches strerror... yes
+#57 29.50 checking whether signature of pselect conforms to POSIX... yes
+#57 29.55 checking whether pselect detects invalid fds... yes
+#57 29.60 checking for pthread_mutexattr_getrobust... yes
+#57 29.65 checking for pthread_rwlock_init... yes
+#57 29.69 checking whether pthread_rwlock_timedrdlock is declared... yes
+#57 29.72 checking for reasonable pthread_rwlock wait queue handling... no
+#57 34.71 checking whether pthread_create exists as a global function... yes
+#57 34.80 checking whether pthread_mutex_timedlock is declared... yes
+#57 34.86 checking for pthread_mutex_timedlock... yes
+#57 34.97 checking whether pthread_sigmask is a macro... no
+#57 35.01 checking whether pthread_sigmask works without -lpthread... yes
+#57 35.13 checking whether pthread_sigmask returns error numbers... yes
+#57 35.24 checking for putenv compatible with GNU and SVID... yes
+#57 35.37 checking for random... yes
+#57 35.48 checking for initstate... yes
+#57 35.57 checking for setstate... yes
+#57 35.67 checking for random.h... no
+#57 35.74 checking for struct random_data... yes
+#57 35.85 checking for random_r... yes
+#57 35.95 checking whether sched_yield is declared... yes
+#57 36.01 checking whether select supports a 0 argument... yes
+#57 36.11 checking whether select detects invalid fds... yes
+#57 36.22 checking whether setenv validates arguments... yes
+#57 36.34 checking whether sleep is declared... yes
+#57 36.40 checking for working sleep... yes
+#57 37.51 checking for socklen_t... yes
+#57 37.56 checking for catgets... yes
+#57 37.61 checking whether symlink handles trailing slash correctly... yes
+#57 37.66 checking for IPv4 sockets... (cached) yes
+#57 37.66 checking for IPv6 sockets... (cached) yes
+#57 37.66 checking for UNIX domain sockets... yes
+#57 37.69 checking whether time() works... guessing no
+#57 37.70 checking whether trunc is declared... yes
+#57 37.89 checking whether truncl is declared... yes
+#57 38.08 checking for unsetenv... yes
+#57 38.12 checking for unsetenv() return type... int
+#57 38.15 checking whether unsetenv obeys POSIX... yes
+#57 38.20 checking whether wctob works... guessing yes
+#57 38.20 checking whether an open file can be renamed... yes
+#57 38.26 checking if changeword is wanted... no
+#57 38.26 checking which shell to use for syscmd... /bin/sh
+#57 38.26 checking if malloc debugging is wanted... no
+#57 38.26 checking whether NLS is requested... yes
+#57 38.27 checking for msgfmt... /usr/bin/msgfmt
+#57 38.27 checking for gmsgfmt... /usr/bin/msgfmt
+#57 38.28 checking for xgettext... /usr/bin/xgettext
+#57 38.29 checking for msgmerge... /usr/bin/msgmerge
+#57 38.29 checking for CFPreferencesCopyAppValue... (cached) no
+#57 38.29 checking for CFLocaleCopyPreferredLanguages... (cached) no
+#57 38.29 checking for GNU gettext in libc... yes
+#57 38.34 checking whether to use NLS... yes
+#57 38.34 checking where the gettext function comes from... libc
+#57 38.43 checking that generated files are newer than configure... done
+#57 38.44 configure: creating ./config.status
+#57 38.50 config.status: creating Makefile
+#57 38.52 config.status: creating doc/Makefile
+#57 38.53 config.status: creating lib/Makefile
+#57 38.56 config.status: creating po/Makefile.in
+#57 38.57 config.status: creating src/Makefile
+#57 38.59 config.status: creating tests/Makefile
+#57 38.62 config.status: creating checks/Makefile
+#57 38.64 config.status: creating examples/Makefile
+#57 38.65 config.status: creating lib/config.h
+#57 38.67 config.status: executing depfiles commands
+#57 39.61 config.status: executing stamp-h commands
+#57 39.61 config.status: executing po-directories commands
+#57 39.62 config.status: creating po/POTFILES
+#57 39.62 config.status: creating po/Makefile
+#57 39.76 cd checks && make 
+#57 39.76 make[1]: Entering directory '/sources/m4-1.4.21/checks'
+#57 39.76 make[1]: Nothing to be done for 'all'.
+#57 39.76 make[1]: Leaving directory '/sources/m4-1.4.21/checks'
+#57 39.76 make  all-recursive
+#57 39.76 make[1]: Entering directory '/sources/m4-1.4.21'
+#57 39.78 Making all in .
+#57 39.78 make[2]: Entering directory '/sources/m4-1.4.21'
+#57 39.79 make[2]: Nothing to be done for 'all-am'.
+#57 39.79 make[2]: Leaving directory '/sources/m4-1.4.21'
+#57 39.79 Making all in examples
+#57 39.79 make[2]: Entering directory '/sources/m4-1.4.21/examples'
+#57 39.79 make[2]: Nothing to be done for 'all'.
+#57 39.79 make[2]: Leaving directory '/sources/m4-1.4.21/examples'
+#57 39.79 Making all in lib
+#57 39.80 make[2]: Entering directory '/sources/m4-1.4.21/lib'
+#57 39.80   GEN      alloca.h
+#57 39.80   GEN      configmake.h
+#57 39.80   GEN      dirent.h
+#57 39.80   GEN      error.h
+#57 39.80   GEN      fcntl.h
+#57 39.81   GEN      malloc/dynarray.gl.h
+#57 39.81   GEN      float.h
+#57 39.81   GEN      malloc/dynarray-skeleton.gl.h
+#57 39.81   GEN      malloc/scratch_buffer.gl.h
+#57 39.81   GEN      iconv.h
+#57 39.81   GEN      inttypes.h
+#57 39.81   GEN      langinfo.h
+#57 39.81   GEN      limits.h
+#57 39.81   GEN      locale.h
+#57 39.82   GEN      math.h
+#57 39.82   GEN      obstack.h
+#57 39.82   GEN      pthread.h
+#57 39.82   GEN      sched.h
+#57 39.82   GEN      signal.h
+#57 39.82   GEN      sigsegv.h
+#57 39.82   GEN      spawn.h
+#57 39.82   GEN      stddef.h
+#57 39.83   GEN      stdio.h
+#57 39.83   GEN      stdlib.h
+#57 39.83   GEN      string.h
+#57 39.83   GEN      sys/random.h
+#57 39.83   GEN      sys/stat.h
+#57 39.84   GEN      sys/types.h
+#57 39.84   GEN      sys/wait.h
+#57 39.85   GEN      time.h
+#57 39.85   GEN      uchar.h
+#57 39.85   GEN      unicase.h
+#57 39.86   GEN      unictype.h
+#57 39.87   GEN      uninorm.h
+#57 39.87   GEN      unistd.h
+#57 39.87   GEN      unistr.h
+#57 39.87   GEN      unitypes.h
+#57 39.88   GEN      uniwidth.h
+#57 39.88   GEN      wchar.h
+#57 39.88   GEN      wctype.h
+#57 39.92 make  all-am
+#57 39.93 make[3]: Entering directory '/sources/m4-1.4.21/lib'
+#57 39.93   CC       libm4_a-asyncsafe-spin.o
+#57 39.94   CC       libm4_a-openat-proc.o
+#57 39.94   CC       libm4_a-gl_avltree_oset.o
+#57 39.94   CC       libm4_a-basename-lgpl.o
+#57 39.94   CC       libm4_a-binary-io.o
+#57 39.94   CC       libm4_a-bitrotate.o
+#57 39.94   CC       libm4_a-btowc.o
+#57 39.94   CC       libm4_a-c-ctype.o
+#57 40.01   CC       libm4_a-c-stack.o
+#57 40.01   CC       libm4_a-c-strcasecmp.o
+#57 40.01   CC       libm4_a-c32isalnum.o
+#57 40.02   CC       libm4_a-c32isalpha.o
+#57 40.04   CC       libm4_a-c32isblank.o
+#57 40.05   CC       libm4_a-c32iscntrl.o
+#57 40.07   CC       libm4_a-c32isdigit.o
+#57 40.07   CC       libm4_a-c32isgraph.o
+#57 40.11   CC       libm4_a-c32islower.o
+#57 40.11   CC       libm4_a-c32isprint.o

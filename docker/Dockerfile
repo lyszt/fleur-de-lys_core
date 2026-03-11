@@ -1,10 +1,11 @@
 # =============================================================================
 # Fleur de Lys — Multi-Stage Build Environment
 # Stage 1: toolchain-builder  — bootstrap toolchain (binutils, llvm wrappers, kernel headers, glibc)
-# Stage 1b: glibc built as a separate RUN for fast iteration
 # Stage 2: temp-tools-builder — all pre-chroot tools
 # Stage 3: final              — clean image, just /tools + runtime fs utils
 # =============================================================================
+
+# syntax=docker/dockerfile:1
 
 # -----------------------------------------------------------------------------
 # STAGE 1: toolchain-builder
@@ -24,6 +25,7 @@ RUN pacman -Syu --noconfirm && \
         python perl texinfo gettext bc && \
     pacman -Scc --noconfirm && \
     rm -rf /var/cache/pacman/pkg/*
+
 RUN mkdir -pv /tools /sources /engine /recipes
 
 COPY engine/fleur-build.sh /usr/bin/fleur-build
@@ -34,22 +36,18 @@ RUN chmod +x /usr/bin/fetch_sources
 
 COPY recipes/stage1/ /recipes/stage1/
 
-# Downloads isolated — cheap to retry on mirror failures
-RUN fetch_sources /recipes/stage1/binutils-pass1.recipe
-RUN fetch_sources /recipes/stage1/llvm-bootstrap.recipe
-RUN fetch_sources /recipes/stage1/zen-kernel.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage1/binutils-pass1.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage1/llvm-bootstrap.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage1/zen-kernel.recipe
 
-# Builds: binutils pass 1, host-llvm cross wrappers, zen kernel headers
-# Does NOT build glibc — that is the next step for easy re-runs
-RUN fleur-build /recipes/stage1/binutils-pass1.recipe
-RUN fleur-build /recipes/stage1/llvm-bootstrap.recipe
-RUN fleur-build /recipes/stage1/zen-kernel.recipe
+RUN --mount=type=cache,target=/sources fleur-build /recipes/stage1/binutils-pass1.recipe
+RUN --mount=type=cache,target=/sources fleur-build /recipes/stage1/llvm-bootstrap.recipe
+RUN --mount=type=cache,target=/sources fleur-build /recipes/stage1/zen-kernel.recipe
 
-# Glibc isolated as its own layer — rebuild this step alone when iterating
-RUN fetch_sources /recipes/stage1/glibc.recipe
-RUN fleur-build   /recipes/stage1/glibc.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage1/glibc.recipe
+RUN --mount=type=cache,target=/sources fleur-build   /recipes/stage1/glibc.recipe
 
-RUN rm -rf /sources /recipes/stage1
+RUN rm -rf /recipes/stage1
 
 # -----------------------------------------------------------------------------
 # STAGE 2: temp-tools-builder
@@ -69,7 +67,7 @@ RUN pacman -Syu --noconfirm && \
         python perl texinfo gettext bc && \
     pacman -Scc --noconfirm && \
     rm -rf /var/cache/pacman/pkg/*
-# Only bring /tools from stage 1 — not the full layer
+
 COPY --from=toolchain-builder /tools /tools
 
 RUN mkdir -pv /sources /engine /recipes
@@ -82,60 +80,59 @@ RUN chmod +x /usr/bin/fetch_sources
 
 COPY recipes/stage2/ /recipes/stage2/
 
-# Downloads isolated in their own layer — cheap to retry on flaky mirrors
-RUN fetch_sources /recipes/stage2/m4.recipe
-RUN fetch_sources /recipes/stage2/pkgconf.recipe
-RUN fetch_sources /recipes/stage2/ncurses.recipe
-RUN fetch_sources /recipes/stage2/zsh.recipe
-RUN fetch_sources /recipes/stage2/make.recipe
-RUN fetch_sources /recipes/stage2/sed.recipe
-RUN fetch_sources /recipes/stage2/gawk.recipe
-RUN fetch_sources /recipes/stage2/bison.recipe
-RUN fetch_sources /recipes/stage2/diffutils.recipe
-RUN fetch_sources /recipes/stage2/findutils.recipe
-RUN fetch_sources /recipes/stage2/patch.recipe
-RUN fetch_sources /recipes/stage2/tar.recipe
-RUN fetch_sources /recipes/stage2/gzip.recipe
-RUN fetch_sources /recipes/stage2/grep.recipe
-RUN fetch_sources /recipes/stage2/gettext.recipe
-RUN fetch_sources /recipes/stage2/zstd.recipe
-RUN fetch_sources /recipes/stage2/libtool.recipe
-RUN fetch_sources /recipes/stage2/kmod.recipe
-RUN fetch_sources /recipes/stage2/shadow.recipe
-RUN fetch_sources /recipes/stage2/python.recipe
-RUN fetch_sources /recipes/stage2/ninja.recipe
-RUN fetch_sources /recipes/stage2/meson.recipe
-RUN fetch_sources /recipes/stage2/cmake.recipe
-RUN fetch_sources /recipes/stage2/binutils-pass2.recipe
-RUN fetch_sources /recipes/stage2/llvm.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/m4.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/pkgconf.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/ncurses.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/zsh.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/make.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/sed.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/gawk.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/bison.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/diffutils.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/findutils.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/patch.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/tar.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/gzip.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/grep.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/gettext.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/zstd.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/libtool.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/kmod.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/shadow.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/python.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/ninja.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/meson.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/cmake.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/binutils-pass2.recipe
+RUN --mount=type=cache,target=/sources fetch_sources /recipes/stage2/llvm.recipe
 
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/m4.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/pkgconf.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/ncurses.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/zsh.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/make.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/sed.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/gawk.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/bison.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/diffutils.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/findutils.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/patch.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/tar.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/gzip.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/grep.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/gettext.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/zstd.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/libtool.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/kmod.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/shadow.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/python.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/ninja.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/meson.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/cmake.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/binutils-pass2.recipe
-RUN FLEUR_STAGE=2 fleur-build /recipes/stage2/llvm.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/m4.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/pkgconf.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/ncurses.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/zsh.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/make.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/sed.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/gawk.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/bison.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/diffutils.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/findutils.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/patch.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/tar.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/gzip.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/grep.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/gettext.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/zstd.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/libtool.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/kmod.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/shadow.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/python.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/ninja.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/meson.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/cmake.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/binutils-pass2.recipe
+RUN --mount=type=cache,target=/sources FLEUR_STAGE=2 fleur-build /recipes/stage2/llvm.recipe
 
-RUN rm -rf /sources /recipes /usr/bin/fleur-build /usr/bin/fetch_sources
+RUN rm -rf /recipes /usr/bin/fleur-build /usr/bin/fetch_sources
 
 # -----------------------------------------------------------------------------
 # STAGE 3: final — clean slate, copy only /tools
@@ -150,7 +147,6 @@ RUN pacman -Syu --noconfirm && \
     pacman -Scc --noconfirm && \
     rm -rf /var/cache/pacman/pkg/*
 
-# Only /tools from stage 2 — no build deps, no sources, no pacman cache
 COPY --from=temp-tools-builder /tools /tools
 
 ENV PATH=/tools/bin:/usr/bin:/bin

@@ -3,13 +3,27 @@ set -e
 
 LFS_TGT="x86_64-fleur-linux-gnu"
 MAKEFLAGS="-j$(nproc)"
-
 STAGE="${FLEUR_STAGE:-1}"
 
 if [ "$STAGE" = "2" ]; then
   export PATH="/usr/bin:/bin:/tools/bin"
   unset CPATH
   unset LIBRARY_PATH
+  unset LD_LIBRARY_PATH
+  # Force all stage 2 packages to link against /tools/lib, not host glibc
+  export LDFLAGS="-L/tools/lib -Wl,-rpath,/tools/lib -Wl,--dynamic-linker=/tools/lib/ld-linux-x86-64.so.2"
+  # Wrapper scripts so CC/CXX have no spaces — autoconf breaks on spaces in $CC
+  cat >/usr/local/bin/fleur-cc <<'WRAPPER'
+#!/bin/sh
+exec clang --sysroot=/ "$@"
+WRAPPER
+  cat >/usr/local/bin/fleur-cxx <<'WRAPPER'
+#!/bin/sh
+exec clang++ --sysroot=/ "$@"
+WRAPPER
+  chmod +x /usr/local/bin/fleur-cc /usr/local/bin/fleur-cxx
+  export CC=/usr/local/bin/fleur-cc
+  export CXX=/usr/local/bin/fleur-cxx
 else
   export PATH="/tools/bin:/usr/bin:/bin"
   export CPATH="/tools/include"
@@ -34,7 +48,6 @@ build_recipe() {
   echo ">>> Engine: Starting build for ${PKG_NAME} ${PKG_VER} (stage ${STAGE})"
   cd /sources
 
-  # Derive tarball filename from SRC_URI if set, otherwise guess
   local TARBALL
   local WORKDIR
   local META_WORKDIR=0
