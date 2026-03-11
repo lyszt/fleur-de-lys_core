@@ -10,7 +10,6 @@ do_configure() {
     NCURSES_CFLAGS=$(pkg-config --cflags ncursesw 2>/dev/null || echo "-I/tools/include -I/tools/include/ncursesw")
     NCURSES_LIBS=$(pkg-config --libs ncursesw 2>/dev/null || echo "-L/tools/lib -lncursesw")
 
-    CC="$LFS_TGT-gcc" \
     CPPFLAGS="$NCURSES_CFLAGS" \
     LDFLAGS="$NCURSES_LIBS -Wl,-rpath,/tools/lib" \
     ./configure \

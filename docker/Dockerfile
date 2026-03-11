@@ -57,7 +57,7 @@ RUN rm -rf /sources /recipes/stage1
 FROM archlinux@sha256:6417af93a50740f2c88503b098e780c9edf5ee00aa156021c28bcfffe226f57d AS temp-tools-builder
 ENV LC_ALL=POSIX
 ENV LFS_TGT=x86_64-fleur-linux-gnu
-ENV PATH=/tools/bin:/usr/bin:/bin
+ENV PATH=/usr/bin:/bin:/tools/bin
 ENV MAKEFLAGS="-j$(nproc)"
 
 RUN pacman -Syu --noconfirm && \
