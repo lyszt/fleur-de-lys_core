@@ -2,7 +2,7 @@
 
 *"If you wish to make an apple pie from scratch, first invent the universe." -- Carl Sagan*
 
-Fleur de Lys is an independent Linux distribution built from the ground up. While initially inspired by the Linux From Scratch methodology, it has since forged its own unique path and tooling. The system is assembled inside a disk image and developed through a staged Docker toolchain and a chroot environment on the host machine.
+Fleur de Lys is a Linux distribution built from the ground up. The system is assembled inside a disk image and developed through a staged Docker toolchain and a chroot environment on the host machine.
 
 ## Disk Layout
 
