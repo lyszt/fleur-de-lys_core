@@ -8,7 +8,6 @@ do_configure() {
     sed '/thread_header =/s/@.*@/gthr-posix.h/' -i libgcc/Makefile.in libstdc++-v3/include/Makefile.in
     mkdir -v build && cd build
     ../configure --build=$(../config.guess) \
-        --host=$LFS_TGT \
         --target=$LFS_TGT \
         LDFLAGS_FOR_TARGET="-L$PWD/$LFS_TGT/libgcc" \
         --prefix=/tools \

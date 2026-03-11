@@ -5,7 +5,6 @@ do_configure() {
     mkdir -v build && cd build
     ../configure --prefix=/tools \
         --build=$(../config.guess) \
-        --host=$LFS_TGT \
         --disable-nls \
         --enable-shared \
         --enable-gprofng=no \

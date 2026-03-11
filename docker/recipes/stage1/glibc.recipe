@@ -1,6 +1,7 @@
 PKG_NAME="glibc"
 PKG_VER="2.41"
 SRC_URI="https://ftpmirror.gnu.org/glibc/glibc-${PKG_VER}.tar.xz"
+# If upstream or main mirror is unreliable, add fallback URLs here as needed.
 
 # Optimized but safe — no march=native to avoid host CPU dependency
 # Add PGO later as a deliberate two-pass step

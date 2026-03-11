@@ -49,7 +49,6 @@ build_recipe() {
     WORKDIR=$(tar -tf "$TARBALL" 2>/dev/null | head -1 | cut -d/ -f1)
     WORKDIR="/sources/${WORKDIR}"
     tar -xf "$TARBALL"
-
     if [ -z "$WORKDIR" ] || [ ! -d "$WORKDIR" ]; then
       echo "Error: could not find extracted directory for ${PKG_NAME} ${PKG_VER} (tarball: $TARBALL)"
       exit 1
@@ -71,6 +70,8 @@ build_recipe() {
     cd "$WORKDIR"
     if declare -f do_configure >/dev/null; then
       do_configure
+    elif [ "$STAGE" = "2" ]; then
+      ./configure --prefix=/tools $EXTRA_CONF
     else
       ./configure --prefix=/tools --host=$LFS_TGT --disable-static $EXTRA_CONF
     fi

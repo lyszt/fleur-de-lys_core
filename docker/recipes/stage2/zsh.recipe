@@ -15,7 +15,6 @@ do_configure() {
     LDFLAGS="$NCURSES_LIBS -Wl,-rpath,/tools/lib" \
     ./configure \
         --prefix=/tools \
-        --host=$LFS_TGT \
         --enable-multibyte \
         --with-tcsetpgrp \
         --disable-pcre \

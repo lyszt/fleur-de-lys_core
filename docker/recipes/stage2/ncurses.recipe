@@ -4,8 +4,6 @@ SRC_URI="https://ftpmirror.gnu.org/ncurses/ncurses-${PKG_VER}.tar.gz"
 
 do_configure() {
     ./configure --prefix=/tools \
-        --host=$LFS_TGT \
-        --with-build-cc=gcc \
         --with-shared \
         --without-debug \
         --without-ada \
