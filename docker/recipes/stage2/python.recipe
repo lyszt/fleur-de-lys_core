@@ -2,16 +2,19 @@ PKG_NAME="Python"
 PKG_VER="3.13.3"
 SRC_URI="https://www.python.org/ftp/python/${PKG_VER}/Python-${PKG_VER}.tar.xz"
 SRC_URI_MIRRORS="https://ftp.osuosl.org/pub/python/${PKG_VER}/Python-${PKG_VER}.tar.xz"
-EXTRA_CONF="--enable-shared --without-ensurepip"
 
 do_configure() {
     export CPPFLAGS="-I/tools/include"
-    export LDFLAGS="-L/tools/lib -Wl,-rpath,/tools/lib"
-    ./configure --prefix=/tools $EXTRA_CONF
+    ./configure --prefix=/tools \
+        --enable-shared \
+        --without-ensurepip \
+        --build=x86_64-pc-linux-gnu \
+        --host=x86_64-pc-linux-gnu \
+        ac_cv_file__dev_ptmx=yes \
+        ac_cv_file__dev_ptc=no
 }
 
 do_install() {
-    # compileall.py can safely fail
-    make install -j1 || true
+    make -i install
     ln -sfv python3 /tools/bin/python
 }
