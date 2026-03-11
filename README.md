@@ -2,7 +2,7 @@
 
 *"If you wish to make an apple pie from scratch, first invent the universe." -- Carl Sagan*
 
-Fleur de Lys is a Linux distribution built from scratch, following the Linux From Scratch methodology. The system is assembled inside a disk image and developed through a chroot environment on the host machine.
+Fleur de Lys is an independent Linux distribution built from the ground up. While initially inspired by the Linux From Scratch methodology, it has since forged its own unique path and tooling. The system is assembled inside a disk image and developed through a staged Docker toolchain and a chroot environment on the host machine.
 
 ## Disk Layout
 
@@ -48,6 +48,10 @@ sudo bash scripts/build_os.sh
 Fleur_de_Lys.img      # The disk image
 mnt_image/            # Mount point (created by make mount)
 Makefile              # Mount, run, and unmount targets
+docker/               # Multi-stage Docker build environment
+  Dockerfile          # Stage 1 & 2 build layers
+  engine/             # Build scripts (fleur-build.sh, etc.)
+  recipes/            # Software build instructions by stage
 etc/
   os-release          # Distribution identity
 scripts/
@@ -56,4 +60,18 @@ scripts/
   mount.sh            # Legacy mount script
 tests/
   version-check.sh    # Verify host toolchain requirements
+```
+
+## Docker Toolchain Environment
+
+The toolchain and intermediate system tools are constructed using a multi-stage Docker build:
+
+- **Stage 1 (toolchain-builder):** Bootstraps the compiler (gcc/clang), binutils, and glibc.
+- **Stage 2 (temp-tools-builder):** Builds all cross-compiled utilities (bash, coreutils, python, meson, ninja, etc.) into `/tools`.
+
+To build the toolchain environment:
+
+```bash
+cd docker
+make build
 ```
