@@ -6,7 +6,7 @@ mnt_img/
 mnt_image/
 mnt/
 *.tar.xz
-
+*.log
 # Ignore compiled object files (The intermediate batter)
 *.o
 *.ko
