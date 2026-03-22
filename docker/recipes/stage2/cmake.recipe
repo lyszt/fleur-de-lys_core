@@ -7,9 +7,19 @@ https://codeload.github.com/Kitware/CMake/tar.gz/refs/tags/v${PKG_VER}
 "
 do_configure() {
   rm -rf Bootstrap.cmk CMakeFiles
-  cp -P /usr/lib/libidn2.so* /tools/lib/ 2>/dev/null || true
+  # Copy any system shared libs cmake may have linked against into /tools/lib
+  # so the installed binary can find them at runtime in stage2
+  for lib in libidn2 libssl libcrypto libkrb5 libk5crypto libcom_err \
+              libgssapi_krb5 libnghttp2 libnghttp3 libzstd libbrotlidec \
+              libbrotlicommon libpsl; do
+    cp -P /usr/lib/${lib}.so* /tools/lib/ 2>/dev/null || true
+  done
   LDFLAGS="$LDFLAGS -static-libstdc++ -static-libgcc" \
     ./bootstrap --prefix=/tools --no-system-libs --parallel=$(nproc) \
     -- -DUSE_LIBIDN2=OFF -DCURL_USE_LIBIDN2=OFF -DCMake_USE_LIBIDN2=OFF \
-       -DCMAKE_DISABLE_FIND_PACKAGE_Libidn2=ON
+       -DCMAKE_DISABLE_FIND_PACKAGE_Libidn2=ON \
+       -DCMAKE_USE_OPENSSL=OFF \
+       -DCURL_USE_OPENSSL=OFF \
+       -DCMAKE_DISABLE_FIND_PACKAGE_OpenSSL=ON
 }
+do_install() { LD_LIBRARY_PATH=/usr/lib make install/fast; }
