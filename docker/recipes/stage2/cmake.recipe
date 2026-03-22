@@ -22,4 +22,4 @@ do_configure() {
        -DCURL_USE_OPENSSL=OFF \
        -DCMAKE_DISABLE_FIND_PACKAGE_OpenSSL=ON
 }
-do_install() { LD_LIBRARY_PATH=/usr/lib make install/fast; }
+do_install() { /usr/bin/cmake -DCMAKE_INSTALL_PREFIX=/tools -P cmake_install.cmake; }
