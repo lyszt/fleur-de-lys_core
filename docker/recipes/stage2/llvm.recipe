@@ -2,14 +2,14 @@ PKG_NAME="llvm-project"
 PKG_VER="19.1.7"
 SRC_URI="https://github.com/llvm/llvm-project/releases/download/llvmorg-${PKG_VER}/llvm-project-${PKG_VER}.src.tar.xz"
 SRC_URI_MIRRORS="https://codeload.github.com/llvm/llvm-project/tar.gz/refs/tags/llvmorg-${PKG_VER}"
-
 do_configure() {
+    rm -rf build
     mkdir -v build && cd build
     cmake -G Ninja ../llvm \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/tools \
-        -DCMAKE_C_COMPILER=$LFS_TGT-gcc \
-        -DCMAKE_CXX_COMPILER=$LFS_TGT-g++ \
+        -DCMAKE_C_COMPILER=clang \
+        -DCMAKE_CXX_COMPILER=clang++ \
         -DLLVM_ENABLE_PROJECTS="clang;lld" \
         -DLLVM_ENABLE_RUNTIMES="compiler-rt" \
         -DLLVM_TARGETS_TO_BUILD="X86" \
@@ -18,9 +18,7 @@ do_configure() {
         -DLLVM_INCLUDE_BENCHMARKS=OFF \
         -DCLANG_DEFAULT_LINKER=lld
 }
-
 do_compile() { cd build && ninja; }
-
 do_install() {
     cd build && ninja install
     ln -sfv clang /tools/bin/cc
