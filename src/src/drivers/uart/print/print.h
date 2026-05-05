@@ -1,8 +1,9 @@
-#ifndef PRINT_H 
-#define PRINT_H 
+#pragma once
 
-void printf();
+extern "C" {
+    void print_char(char c);
+    void print_str(const char* s);
+    void print_int(long num, int base);
 
-
-
-#endif 
+    void printf(const char* format, ...);
+}
