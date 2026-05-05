@@ -32,7 +32,7 @@ $(TARGET): $(OBJS)
 	$(LD) $(LDFLAGS) $^ -o $@
 
 run: $(TARGET)
-	qemu-system-riscv64 -machine virt -bios none -kernel $(TARGET) -nographic
+	qemu-system-riscv64 -machine virt -bios none -kernel $(TARGET) -serial stdio
 
 clean:
 	rm -rf $(BUILD)
