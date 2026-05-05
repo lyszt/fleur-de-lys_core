@@ -4,28 +4,35 @@ LD      := riscv64-unknown-elf-ld
 
 ARCH    := -march=rv64i -mabi=lp64
 
-SRCDIR   := src/src
-LDSCRIPT := src/linker.ld
+SRCDIR   := src
+LDSCRIPT := $(SRCDIR)/linker.ld
 BUILD    := build
 TARGET   := $(BUILD)/os.elf
 
 ASFLAGS  := $(ARCH)
-CFLAGS   := --target=riscv64-unknown-elf $(ARCH) -mcmodel=medany -ffreestanding -fno-exceptions -fno-rtti -nostdlib -O0
+CFLAGS   := --target=riscv64-unknown-elf $(ARCH) -mcmodel=medany -ffreestanding -fno-exceptions -fno-rtti -nostdlib -O0 -I$(SRCDIR)
 LDFLAGS  := -T $(LDSCRIPT)
 
-OBJS := $(BUILD)/boot.o $(BUILD)/kernel.o
+# 1. Dynamically find every .cpp and .s file in any subfolder of SRCDIR
+CPP_SRCS := $(shell find $(SRCDIR) -name '*.cpp')
+ASM_SRCS := $(shell find $(SRCDIR) -name '*.s')
+
+CPP_OBJS := $(patsubst $(SRCDIR)/%.cpp, $(BUILD)/%.o, $(CPP_SRCS))
+ASM_OBJS := $(patsubst $(SRCDIR)/%.s, $(BUILD)/%.o, $(ASM_SRCS))
+
+OBJS := $(ASM_OBJS) $(CPP_OBJS)
 
 .PHONY: all clean run
 
 all: $(TARGET)
 
-$(BUILD):
-	mkdir -p $@
-
-$(BUILD)/boot.o: $(SRCDIR)/boot.s | $(BUILD)
+# Rule for Assembly files
+$(BUILD)/%.o: $(SRCDIR)/%.s
+	@mkdir -p $(dir $@)
 	$(AS) $(ASFLAGS) $< -o $@
 
-$(BUILD)/kernel.o: $(SRCDIR)/kernel.cpp | $(BUILD)
+$(BUILD)/%.o: $(SRCDIR)/%.cpp
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(TARGET): $(OBJS)
