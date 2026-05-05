@@ -14,7 +14,7 @@ mnt/
 # Ignore the build directory (if you have one)
 /build
 /mnt
-
+build
 # Ignore temporary editor files
 *.swp
 *~
