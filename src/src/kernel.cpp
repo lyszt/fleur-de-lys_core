@@ -10,4 +10,8 @@ void kernel_main() {
   const char* message =   "Fleur de Lys s'est fait initialisée.\n";
 
   printf(message);
+
+  while(true) {
+    asm volatile("wfi");
+  }
 }
