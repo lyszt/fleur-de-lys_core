@@ -87,3 +87,62 @@ void print_int(long num, int base){
     }
   }
 }
+
+int printf(const char* format, ...) {
+  volatile char* uart = UART_BASE;
+  va_list args;
+  va_start(args, format);
+
+  while(*format) {
+    if(*format != '%') {
+      while (!(UART_STATUS & TX_READY));
+      *uart = *format++;
+      continue;
+    }
+
+    format++;
+
+    switch(*format) {
+      case 'c': {
+        char c = (char)va_arg(args, int);
+        while (!(UART_STATUS & TX_READY));
+        *uart = c;
+        break;
+      }
+      case 's': {
+        const char* s = va_arg(args, const char*);
+        print_cstr(s);
+        break;
+      }
+      case 'd': {
+        int n = va_arg(args, int);
+        print_int(n, 10);
+        break;
+      }
+      case 'x': {
+        int n = va_arg(args, int);
+        print_int(n, 16);
+        break;
+      }
+      case 'o': {
+        int n = va_arg(args, int);
+        print_int(n, 8);
+        break;
+      }
+      case 'b': {
+        int n = va_arg(args, int);
+        print_int(n, 2);
+        break;
+      }
+      case '%': {
+        while (!(UART_STATUS & TX_READY));
+        *uart = '%';
+        break;
+      }
+    }
+    format++;
+  }
+
+  va_end(args);
+  return 0;
+}
