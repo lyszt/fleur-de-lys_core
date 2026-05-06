@@ -1,7 +1,9 @@
 #include "./print.h"
+#include "../../string/string.h"
 
-// riscv uart address for virtual machine 
-volatile char* uart = (volatile char*)0x10000000;
+#define UART_BASE    ((volatile char*)0x10000000)
+#define UART_STATUS  (*(UART_BASE + 5))
+#define TX_READY     (1 << 5)
 
 typedef __builtin_va_list va_list;
 #define va_start(v, l) __builtin_va_start(v, l)
@@ -9,11 +11,14 @@ typedef __builtin_va_list va_list;
 #define va_end(v)      __builtin_va_end(v)
 
 
-void print_str(char* str, long long int bytes, long long int uart_addr) {
-  volatile char* uart_des = (volatile char*)uart_addr;
-  char* end = str + bytes; 
-  while(str < end) {
-    *uart = *str++;
+void print_str(const char* str, size_t bytes, volatile char* uart_addr) {
+  const char* end = str + bytes;
+  while (str < end) {
+    while (!(UART_STATUS & TX_READY));
+    *uart_addr = *str++;
   }
 }
 
+void print_cstr(const char* str) {
+  print_str(str, strlen(str), UART_BASE);
+}
