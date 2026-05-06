@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../types.h"
+#include "../../types/types.h"
 
 extern "C" {
     void print_char(char c);

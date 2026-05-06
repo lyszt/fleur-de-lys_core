@@ -1,4 +1,5 @@
 #include "./print.h"
+#include "../../math/math.h"
 #include "../../string/string.h"
 
 #define UART_BASE    ((volatile char*)0x10000000)
@@ -21,4 +22,68 @@ void print_str(const char* str, size_t bytes, volatile char* uart_addr) {
 
 void print_cstr(const char* str) {
   print_str(str, strlen(str), UART_BASE);
+}
+
+void print_int(long num, int base){
+  if(num == 0) {
+    print_cstr("0");
+    return;
+  }
+
+  char buf[65];
+  unsigned long unum;
+
+  if(base == 10 && num < 0) {
+    print_str("-", 1, UART_BASE);
+    unum = (unsigned long)(-(num + 1)) + 1;
+  } else {
+    unum = (unsigned long)num;
+  }
+
+  switch(base) {
+    case 2: {
+      int digits = 64 - __builtin_clzl(unum);
+      buf[digits] = '\0';
+      for(int i = digits - 1; i >= 0; i--) {
+        buf[i] = '0' + (unum & 1);
+        unum >>= 1;
+      }
+      print_cstr(buf);
+      break;
+    }
+    case 16: {
+      const char* hex = "0123456789abcdef";
+      int digits = (64 - __builtin_clzl(unum) + 3) >> 2;
+      buf[digits] = '\0';
+      for(int i = digits - 1; i >= 0; i--) {
+        buf[i] = hex[unum & 0xF];
+        unum >>= 4;
+      }
+      print_cstr(buf);
+      break;
+    }
+    case 10: {
+      int digits = log10i(unum) + 1;
+      buf[digits] = '\0';
+      for(int i = digits - 1; i >= 0; i--) {
+        buf[i] = '0' + (unum % 10);
+        unum /= 10;
+      }
+      print_cstr(buf);
+      break;
+    }
+    default: {
+      const char* digits = "0123456789abcdef";
+      int count = 0;
+      unsigned long tmp = unum;
+      do { tmp /= base; count++; } while (tmp > 0);
+      buf[count] = '\0';
+      for(int i = count - 1; i >= 0; i--) {
+        buf[i] = digits[unum % base];
+        unum /= base;
+      }
+      print_cstr(buf);
+      break;
+    }
+  }
 }
