@@ -1,3 +1,5 @@
+#include "drivers/uart/print/print.h"
+
 extern "C" {
   void kernel_main();
 }
@@ -5,9 +7,7 @@ extern "C" {
 void kernel_main() { 
   // QEMU Uart Chip  
   volatile char *uart = (volatile char *)0x10000000;
-  const char* message =   "Fleur de Lys s'est fait initialisée.";
+  const char* message =   "Fleur de Lys s'est fait initialisée.\n";
 
-  for (int i = 0; message[i] != '\0'; i++) {
-    *uart = message[i];
-  }
+  printf(message);
 }

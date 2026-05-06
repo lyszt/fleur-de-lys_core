@@ -2,7 +2,7 @@ AS      := riscv64-unknown-elf-as
 CC      := clang
 LD      := riscv64-unknown-elf-ld
 
-ARCH    := -march=rv64i -mabi=lp64
+ARCH    := -march=rv64im -mabi=lp64
 
 SRCDIR   := src
 LDSCRIPT := $(SRCDIR)/linker.ld

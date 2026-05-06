@@ -1,8 +1,6 @@
 #include "./string.h"
 
-#include <stdint.h>
-
-long long strlen(const char* s) {
+size_t strlen(const char* s) {
     const char* start = s;
 
     // align pointer to 8 bytes
