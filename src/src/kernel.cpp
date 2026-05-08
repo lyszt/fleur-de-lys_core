@@ -5,6 +5,7 @@ extern "C" {
   void kernel_main();
 }
 
+
 void kernel_main() { 
   // QEMU Uart Chip  
   volatile char *uart = (volatile char *)0x10000000;
