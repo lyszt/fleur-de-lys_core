@@ -1,5 +1,5 @@
-#include "../../interrupts/interrupts.h"
-#include "../../uart/print/print.h"
+#include "./interrupts.h"
+#include "../uart/print/print.h"
 
 __attribute__((interrupt("machine")))
 void trap_handler() {
