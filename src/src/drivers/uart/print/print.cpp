@@ -134,6 +134,16 @@ int printf(const char* format, ...) {
         print_int(n, 2);
         break;
       }
+      case 'l': {
+        format++;
+        switch(*format) {
+          case 'd': { print_int(va_arg(args, long), 10); break; }
+          case 'x': { print_int(va_arg(args, long), 16); break; }
+          case 'o': { print_int(va_arg(args, long), 8);  break; }
+          case 'b': { print_int(va_arg(args, long), 2);  break; }
+        }
+        break;
+      }
       case '%': {
         while (!(UART_STATUS & TX_READY));
         *uart = '%';
