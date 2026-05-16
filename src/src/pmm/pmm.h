@@ -13,3 +13,5 @@ struct FreeBlock {
 };
 
 void PMMinit();
+void alloc();
+void free(void *ptr, int order);
